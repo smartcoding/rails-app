@@ -9,10 +9,14 @@ class PostsController < ApplicationController
     @post = current_user.posts.build(params[:post])
     if @post.save
       flash[:success] = 'Your post has been posted!'
-      redirect_to root_url
+      redirect_to @post
     else
       @posts = Post.latest(params)
       render :index
     end
+  end
+
+  def show
+    @post = Post.find(params[:id])
   end
 end
