@@ -1,2 +1,11 @@
 <% provide(:title, "Posts") %>
-<p>Posts Home Page</p>
+<div id="submit-post">
+  <h1>Submit post</h1>
+
+  <% if logged_in? %>
+    <%= render 'post_form' %>
+  <% else %>
+    <p>Please login to submit post</p>
+  <% end %>
+
+</div><!-- end submit-post -->

@@ -1,0 +1,9 @@
+<%= form_for(@post) do |f| %>
+  <%= render 'common/form_errors', object: @post %>
+
+  <p>
+    <%= f.label :body, 'Post' %><br />
+    <%= f.text_area :body %><br />
+    <%= f.submit 'Submit a Post' %>
+  </p>
+<% end %>
