@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_filter :auth, only: [:create]
+  before_filter :auth, only: [:create, :your_posts]
   def index
     @post = Post.new
     @posts = Post.latest(params)
@@ -18,5 +18,9 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
+  end
+
+  def your_posts
+    @posts = current_user.your_posts(params)
   end
 end
