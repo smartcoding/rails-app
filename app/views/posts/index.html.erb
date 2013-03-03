@@ -9,3 +9,14 @@
   <% end %>
 
 </div><!-- end submit-post -->
+
+<div id="posts">
+  <h2>Latest Posts</h2>
+
+  <% if @posts.any? %>
+    <ul><%= render @posts %></ul>
+    <%= will_paginate %>
+  <% else %>
+    <p>No posts have been submitted</p>
+  <% end %>
+</div><!-- end posts -->
