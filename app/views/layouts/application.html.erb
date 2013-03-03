@@ -16,7 +16,12 @@
   <div id="nav">
     <ul>
       <li><%= link_to "Home", root_path %></li>
-      <li><%= link_to "Register", new_user_path %></li>
+      <% if logged_in? %>
+        <li><%= link_to "Logout (#{current_user.username})", '#' %></li>
+      <% else %>
+        <li><%= link_to "Register", new_user_path %></li>
+        <li><%= link_to "Login", new_session_path %></li>
+      <% end %>
     </ul>
   </div><!-- end nav -->
 
