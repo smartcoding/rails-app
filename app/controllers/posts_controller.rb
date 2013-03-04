@@ -39,4 +39,8 @@ class PostsController < ApplicationController
       render :edit
     end
   end
+
+  def search
+    @posts = Post.search(params)
+  end
 end

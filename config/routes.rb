@@ -12,6 +12,7 @@ Smartcoding::Application.routes.draw do
   match '/login', to: 'sessions#new'
   match '/logout', to: 'sessions#destroy', via: :delete
   match '/your_posts', to: 'posts#your_posts'
+  match '/search', to: 'posts#search'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

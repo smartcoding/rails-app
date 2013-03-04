@@ -8,4 +8,8 @@ class Post < ActiveRecord::Base
   def self.latest(params)
     paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
   end
+
+  def self.search(params)
+    where("body LIKE ?", "%#{params[:keyword]}%").paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
+  end
 end
