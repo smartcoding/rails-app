@@ -3,4 +3,5 @@
 <% if on_your_posts_page? %>
   - <%= link_to 'EDIT', edit_post_path(post) %>
 <% end %>
+  - (<%= pluralize(post.comments.count, 'comment') %>)
 </li>

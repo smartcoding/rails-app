@@ -3,3 +3,23 @@
 <h1><%= @post.user.username.capitalize %> says:</h1>
 
 <p><%= @post.body %></p>
+
+<div id="post-comments">
+  <h2>Post comment</h2>
+
+  <% if logged_in? %>
+    <%= render 'comments/comment_form' %>
+  <% else %>
+    <p>Please login to post comment</p>
+  <% end %>
+</div><!-- end post-comments -->
+
+<div id="comments">
+  <h2>Comments</h2>
+
+  <% if @post.comments.any? %>
+    <ul><%= render @post.comments %></ul>
+  <% else %>
+    <p>No comments</p>
+  <% end %>
+</div>

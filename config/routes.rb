@@ -4,7 +4,9 @@ Smartcoding::Application.routes.draw do
 
   resources :users, only: [:new, :create]
   resources :sessions, only: [:new, :create]
-  resources :posts, except: [:new]
+  resources :posts, except: [:new] do
+    resources :comments, only: [:create]
+  end
 
   match '/register', to: 'users#new'
   match '/login', to: 'sessions#new'
