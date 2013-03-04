@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_filter :auth, only: [:create, :your_posts]
+  before_filter :auth, only: [:create, :your_posts, :edit, :update]
   def index
     @post = Post.new
     @posts = Post.latest(params)
@@ -22,5 +22,20 @@ class PostsController < ApplicationController
 
   def your_posts
     @posts = current_user.your_posts(params)
+  end
+
+  def edit
+    @post = current_user.posts.find(params[:id])
+  end
+
+  def update
+    @post = current_user.posts.find(params[:id])
+
+    if @post.update_attributes(params[:post])
+      flash[:success] = 'Your post was updated'
+      redirect_to @post
+    else
+      render :edit
+    end
   end
 end
