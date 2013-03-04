@@ -1,7 +1,17 @@
 class User < ActiveRecord::Base
   has_many :posts
   has_many :comments
+
+  has_many :relationships, foreign_key: "follower_id", dependent: :destroy
+  has_many :followed_users, through: :relationships, source: :followed
+
+  has_many :reverse_relationships, foreign_key: "followed_id",
+                                   class_name: "Relationship",
+                                   dependent: :destroy
+  has_many :followers, through: :reverse_relationships, source: :follower
+
   attr_accessible :username, :password, :password_confirmation
+
 
   has_secure_password
 
@@ -14,5 +24,20 @@ class User < ActiveRecord::Base
 
   def your_posts(params)
     posts.paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
+  end
+
+  def feed
+    Post.from_users_followed_by(self)
+  end
+
+  def following?(other_user)
+    self.relationships.find_by_followed_id(other_user.id)
+  end
+
+  def follow!(other_user)
+    self.relationships.create!(followed_id: other_user.id)
+  end
+  def unfollow!(other_user)
+    self.relationships.find_by_followed_id(other_user.id).destroy
   end
 end
