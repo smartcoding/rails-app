@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_filter :auth, only: [:following]
+
   def new
     @user = User.new
   end
@@ -12,5 +14,14 @@ class UsersController < ApplicationController
     else
       render 'new'
     end
+  end
+
+  def show
+    @user = User.find(params[:id])
+    @posts = @user.your_posts(params)
+  end
+
+  def following
+    @posts = current_user.following_feed(params)
   end
 end

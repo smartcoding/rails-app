@@ -1,18 +1,6 @@
 <% provide(:title, "Posts") %>
-<div id="submit-post">
-  <h1>Submit post</h1>
-
-  <% if logged_in? %>
-    <%= render 'post_form' %>
-  <% else %>
-    <p>Please login to submit post</p>
-  <% end %>
-
-</div><!-- end submit-post -->
 
 <div id="posts">
-  <h2>Latest Posts</h2>
-
   <% if @posts.any? %>
     <ul><%= render @posts %></ul>
     <%= will_paginate %>

@@ -1,0 +1,8 @@
+<% if @posts.any? %>
+  <ul>
+    <%= render @posts %>
+  </ul>
+<% else %>
+  <p>There are currently no posts for your criteria</p>
+<% end %>
+

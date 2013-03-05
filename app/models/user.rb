@@ -26,8 +26,8 @@ class User < ActiveRecord::Base
     posts.paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
   end
 
-  def feed
-    Post.from_users_followed_by(self)
+  def following_feed(params)
+    Post.from_users_followed_by(self).paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
   end
 
   def following?(other_user)

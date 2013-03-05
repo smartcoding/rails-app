@@ -18,14 +18,18 @@
   
   <div id="nav">
     <ul>
-      <li><%= link_to "Home", root_path %></li>
+      <li><%= link_to "Popular", popular_path %></li>
+      <li><%= link_to "Fresh", fresh_path %></li>
       <% if logged_in? %>
-        <li><%= link_to 'Your Posts', your_posts_path %></li>
+        <li><%= link_to 'Your Posts', user_path(current_user) %></li>
+        <li><%= link_to 'Following', following_path %></li>
         <li><%= link_to "Logout (#{current_user.username})", logout_path, method: 'delete' %></li>
       <% else %>
         <li><%= link_to "Register", register_path %></li>
         <li><%= link_to "Login", login_path %></li>
       <% end %>
+
+      <li><%= link_to "New Post", new_post_path %></li>
     </ul>
   </div><!-- end nav -->
 

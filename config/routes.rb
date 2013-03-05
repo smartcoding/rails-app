@@ -1,17 +1,26 @@
 Smartcoding::Application.routes.draw do
 
   root :to => 'posts#index'
+  match '/popular', to: 'posts#popular'
+  match '/fresh', to: 'posts#fresh'
+  match '/following', to: 'users#following'
 
-  resources :users, only: [:new, :create]
+  resources :users, only: [:show, :new, :create] do
+    member do
+      post 'follow', :controller => "relationships", :action => "create"
+    end
+    member do
+      delete 'unfollow', :controller => "relationships", :action => "destroy"
+    end
+  end
   resources :sessions, only: [:new, :create]
-  resources :posts, except: [:new] do
+  resources :posts do
     resources :comments, only: [:create]
   end
 
   match '/register', to: 'users#new'
   match '/login', to: 'sessions#new'
   match '/logout', to: 'sessions#destroy', via: :delete
-  match '/your_posts', to: 'posts#your_posts'
   match '/search', to: 'posts#search'
 
   # The priority is based upon order of creation:

@@ -1,8 +1,26 @@
 class PostsController < ApplicationController
-  before_filter :auth, only: [:create, :your_posts, :edit, :update]
+  before_filter :auth, only: [:new, :create, :edit, :update]
+
   def index
-    @post = Post.new
+    if logged_in?
+      redirect_to following_url, :status => 302
+    else
+      redirect_to popular_url, :status => 302
+    end
+  end
+
+  def popular
+    @posts = Post.popular(params)
+    render :posts
+  end
+
+  def fresh
     @posts = Post.latest(params)
+    render :posts
+  end
+
+  def new
+    @post = Post.new
   end
 
   def create
@@ -19,10 +37,6 @@ class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     @comment = Comment.new
-  end
-
-  def your_posts
-    @posts = current_user.your_posts(params)
   end
 
   def edit
