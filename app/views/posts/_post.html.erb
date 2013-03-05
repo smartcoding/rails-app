@@ -4,5 +4,6 @@ by <%= link_to post.user.username.capitalize, post.user %>
 <% if logged_in? && current_user == @user %>
   - <%= link_to 'EDIT', edit_post_path(post) %>
 <% end %>
-  - (<%= pluralize(post.comments.count, 'comment') %>)
+  - (<%= pluralize(post.comments.count, 'comment') %>,
+  <%= pluralize(post.likes_count, 'like') %>)
 </li>

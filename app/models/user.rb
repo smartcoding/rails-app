@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
                                    dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
 
+  has_many :likes
+
   attr_accessible :username, :password, :password_confirmation
 
 
@@ -39,5 +41,15 @@ class User < ActiveRecord::Base
   end
   def unfollow!(other_user)
     self.relationships.find_by_followed_id(other_user.id).destroy
+  end
+
+  def add_like_to_post!(post)
+    self.likes.create!(post_id: post.id)
+  end
+  def unlike_a_post!(post)
+    self.likes.find_by_post_id(post.id).destroy
+  end
+  def likes_post?(post)
+    self.likes.find_by_post_id post.id
   end
 end

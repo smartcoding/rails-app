@@ -1,5 +1,9 @@
 <% provide(:title, 'View post') %>
 
+<% if logged_in? %>
+  <%= render 'like_form' %>
+<% end %>
+
 <h1><%= @post.user.username.capitalize %> says:</h1>
 
 <p><%= @post.body %></p>

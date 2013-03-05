@@ -16,6 +16,12 @@ Smartcoding::Application.routes.draw do
   resources :sessions, only: [:new, :create]
   resources :posts do
     resources :comments, only: [:create]
+    member do
+      post 'like', :controller => "likes", :action => "create"
+    end
+    member do
+      delete 'unlike', :controller => "likes", :action => "destroy"
+    end
   end
 
   match '/register', to: 'users#new'

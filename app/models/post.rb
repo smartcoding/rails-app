@@ -1,6 +1,8 @@
 class Post < ActiveRecord::Base
   belongs_to :user
   has_many :comments
+  has_many :likes
+
   attr_accessible :body
 
   validates :body, presence: true, length: { minimum: 10 }

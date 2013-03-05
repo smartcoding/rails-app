@@ -1,0 +1,11 @@
+<% unless current_user == @post.user %>
+  <% unless current_user.likes_post?(@post) %>
+    <%= form_tag like_post_path(@post) do %>
+      <%= submit_tag "Like" %>
+    <% end %>
+  <% else %>
+    <%= form_tag unlike_post_path(@post), :method => 'delete' do %>
+      <%= submit_tag "Unlike" %>
+    <% end %>
+  <% end %>
+<% end %>
