@@ -1,5 +1,8 @@
 class PostsController < ApplicationController
   before_filter :auth, only: [:new, :create, :edit, :update]
+  impressionist :unique => [:impressionable_type, :impressionable_id,
+                            :session_hash],
+                :actions => [:show]
 
   def index
     if logged_in?

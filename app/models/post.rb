@@ -3,6 +3,8 @@ class Post < ActiveRecord::Base
   has_many :comments
   has_many :likes
 
+  is_impressionable :counter_cache => { :column_name => :views_count }
+
   attr_accessible :body
 
   validates :body, presence: true, length: { minimum: 10 }
@@ -12,7 +14,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.popular(params)
-    paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
+    paginate(page: params[:page], order: 'views_count DESC, likes_count DESC', per_page: 3)
   end
 
   def self.search(params)
