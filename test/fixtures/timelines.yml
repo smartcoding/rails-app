@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  timelineable_type: MyString
+  timelineable_id: 1
+
+two:
+  timelineable_type: MyString
+  timelineable_id: 1

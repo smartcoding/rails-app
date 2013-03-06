@@ -12,6 +12,9 @@ Smartcoding::Application.routes.draw do
     member do
       delete 'unfollow', :controller => "relationships", :action => "destroy"
     end
+    member do
+      get 'activity', :controller => "users", :action => "activity"
+    end
   end
   resources :sessions, only: [:new, :create]
   resources :posts do

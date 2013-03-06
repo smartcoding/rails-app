@@ -24,4 +24,9 @@ class UsersController < ApplicationController
   def following
     @posts = current_user.following_feed(params)
   end
+
+  def activity
+    @user = User.find(params[:id])
+    @timelines = @user.your_timelines(params)
+  end
 end

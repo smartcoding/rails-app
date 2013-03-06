@@ -1,7 +1,7 @@
 <% provide(:title, 'View post') %>
 
 <% if logged_in? %>
-  <%= render 'like_form' %>
+  <%= render 'posts/like_form' %>
 <% end %>
 
 <p>Views: <%= @post.views_count %></p>

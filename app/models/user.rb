@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :posts
   has_many :comments
+  has_many :timelines
 
   has_many :relationships, foreign_key: "follower_id", dependent: :destroy
   has_many :followed_users, through: :relationships, source: :followed
@@ -26,6 +27,10 @@ class User < ActiveRecord::Base
 
   def your_posts(params)
     posts.paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
+  end
+
+  def your_timelines(params)
+    timelines.paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
   end
 
   def following_feed(params)
