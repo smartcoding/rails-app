@@ -14,7 +14,9 @@ class Post < ActiveRecord::Base
   end
 
   def self.popular(params)
-    paginate(page: params[:page], order: 'views_count DESC, likes_count DESC', per_page: 3)
+    paginate(page: params[:page],
+             order: 'views_count DESC, likes_count DESC, comments_count DESC',
+             per_page: 3)
   end
 
   def self.search(params)
