@@ -57,4 +57,8 @@ class User < ActiveRecord::Base
   def likes_post?(post)
     self.likes.find_by_post_id post.id
   end
+
+  def flow_feed(params)
+    Timeline.from_users_followed_by(self).paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
+  end
 end

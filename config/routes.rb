@@ -4,6 +4,7 @@ Smartcoding::Application.routes.draw do
   match '/popular', to: 'posts#popular'
   match '/fresh', to: 'posts#fresh'
   match '/following', to: 'users#following'
+  match '/flow', to: 'users#flow'
 
   resources :users, only: [:show, :new, :create] do
     member do

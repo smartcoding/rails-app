@@ -21,6 +21,7 @@
       <li><%= link_to "Popular", popular_path %></li>
       <li><%= link_to "Fresh", fresh_path %></li>
       <% if logged_in? %>
+        <li><%= link_to 'Flow', flow_path %></li>
         <li><%= link_to 'Your Posts', user_path(current_user) %></li>
         <li><%= link_to 'Your Activity', activity_user_path(current_user) %></li>
         <li><%= link_to 'Following', following_path %></li>

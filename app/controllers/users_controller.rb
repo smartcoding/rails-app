@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :auth, only: [:following]
+  before_filter :auth, only: [:following, :flow]
 
   def new
     @user = User.new
@@ -28,5 +28,9 @@ class UsersController < ApplicationController
   def activity
     @user = User.find(params[:id])
     @timelines = @user.your_timelines(params)
+  end
+
+  def flow
+    @timelines = current_user.flow_feed(params)
   end
 end
