@@ -1,7 +1,8 @@
 class User < ActiveRecord::Base
-  has_many :posts
-  has_many :comments
-  has_many :timelines
+  has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :timelines, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   has_many :relationships, foreign_key: "follower_id", dependent: :destroy
   has_many :followed_users, through: :relationships, source: :followed
@@ -10,8 +11,6 @@ class User < ActiveRecord::Base
                                    class_name: "Relationship",
                                    dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
-
-  has_many :likes
 
   attr_accessible :username, :password, :password_confirmation
 
