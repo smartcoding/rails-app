@@ -9,22 +9,33 @@ class Like < ActiveRecord::Base
   validates :user_id, presence: true
   validates :post_id, presence: true
 
-  after_create :increment_likes_counter, :add_to_timeline
-  after_destroy :decrement_likes_counter
+  after_create :increment_post_likes_counter,
+               :increment_user_likes_counter,
+               :add_to_timeline
+  after_destroy :decrement_post_likes_counter,
+                :decrement_user_likes_counter
 
   private 
 
-  def increment_likes_counter
-    Post.find( post_id ).increment( :likes_count ).save
+  def increment_post_likes_counter
+    post.increment( :likes_count ).save
   end
 
-  def decrement_likes_counter
-    Post.find( post_id ).decrement( :likes_count ).save
+  def decrement_post_likes_counter
+    post.decrement( :likes_count ).save
   end
 
   def add_to_timeline
     Timeline.create!({ user_id: user_id,
                        timelineable_id: id,
                        timelineable_type: self.class.to_s })
+  end
+
+  def increment_user_likes_counter
+    user.increment( :likes_count ).save :validate => false
+  end
+
+  def decrement_user_likes_counter
+    user.decrement( :likes_count ).save :validate => false
   end
 end
