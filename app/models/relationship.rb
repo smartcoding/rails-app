@@ -9,8 +9,10 @@ class Relationship < ActiveRecord::Base
   validates :followed_id, presence: true
 
   after_create :add_to_timeline,
-               :increment_follower_count
-  after_destroy :decrement_follower_count
+               :increment_follower_count,
+               :increment_followed_count
+  after_destroy :decrement_follower_count,
+                :decrement_followed_count
 
   private 
 
@@ -25,5 +27,12 @@ class Relationship < ActiveRecord::Base
   end
   def decrement_follower_count
     follower.decrement(:following_count).save :validate => false
+  end
+
+  def increment_followed_count
+    followed.increment(:followers_count).save :validate => false
+  end
+  def decrement_followed_count
+    followed.decrement(:followers_count).save :validate => false
   end
 end
