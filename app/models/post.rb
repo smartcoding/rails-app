@@ -10,7 +10,8 @@ class Post < ActiveRecord::Base
 
   validates :body, presence: true, length: { minimum: 10 }
 
-  after_create :add_to_timeline
+  after_create :add_to_timeline, :increment_author_posts_counter
+  after_destroy :decrement_author_posts_counter
 
   def self.latest(params)
     paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
@@ -36,5 +37,13 @@ class Post < ActiveRecord::Base
     Timeline.create!({ user_id: self.user.id,
                        timelineable_id: id,
                        timelineable_type: self.class.to_s })
+  end
+
+  def increment_author_posts_counter
+    user.increment( :posts_count ).save :validate => false
+  end
+
+  def decrement_author_posts_counter
+    user.decrement( :posts_count ).save :validate => false
   end
 end
