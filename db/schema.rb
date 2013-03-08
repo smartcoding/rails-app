@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130308002110) do
+ActiveRecord::Schema.define(:version => 20130308003209) do
 
   create_table "comments", :force => true do |t|
     t.integer  "user_id"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(:version => 20130308002110) do
     t.datetime "updated_at",                     :null => false
     t.integer  "posts_count",     :default => 0
     t.integer  "likes_count",     :default => 0
+    t.integer  "comments_count",  :default => 0
   end
 
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
