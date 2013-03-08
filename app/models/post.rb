@@ -2,7 +2,7 @@ class Post < ActiveRecord::Base
   belongs_to :user
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
-  has_many :timelines, :as => :timelineable
+  has_many :timelines, :as => :timelineable, dependent: :destroy
 
   is_impressionable :counter_cache => { :column_name => :views_count }
 

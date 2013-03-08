@@ -3,7 +3,7 @@ class Relationship < ActiveRecord::Base
 
   belongs_to :follower, class_name: "User"
   belongs_to :followed, class_name: "User"
-  has_many :timelines, :as => :timelineable
+  has_many :timelines, :as => :timelineable, dependent: :destroy
 
   validates :follower_id, presence: true
   validates :followed_id, presence: true
