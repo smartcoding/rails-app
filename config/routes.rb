@@ -1,10 +1,10 @@
 Smartcoding::Application.routes.draw do
 
   root :to => 'posts#index'
-  match '/popular', to: 'posts#popular'
-  match '/fresh', to: 'posts#fresh'
-  match '/following', to: 'users#following'
-  match '/flow', to: 'users#flow'
+  get '/popular', to: 'posts#popular'
+  get '/fresh', to: 'posts#fresh'
+  get '/following', to: 'users#following'
+  get '/flow', to: 'users#flow'
 
   resources :users, only: [:show, :new, :create] do
     member do
@@ -28,10 +28,10 @@ Smartcoding::Application.routes.draw do
     end
   end
 
-  match '/register', to: 'users#new'
-  match '/login', to: 'sessions#new'
+  get '/register', to: 'users#new'
+  get '/login', to: 'sessions#new'
   match '/logout', to: 'sessions#destroy', via: :delete
-  match '/search', to: 'posts#search'
+  get '/search', to: 'posts#search'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
