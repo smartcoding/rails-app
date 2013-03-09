@@ -1,7 +1,7 @@
 <li>
 <%= link_to truncate(post.body, length: 35), post %>
-by <%= link_to post.user.username.capitalize, post.user %>
-<% if logged_in? && current_user == @user %>
+by <%= link_to post.user.email.capitalize, post.user %>
+<% if user_signed_in? && current_user == @user %>
   - <%= link_to 'EDIT', edit_post_path(post) %>
 <% end %>
   - (<%= pluralize(post.comments_count, 'comment') %>,

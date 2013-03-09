@@ -1,5 +1,9 @@
 Smartcoding::Application.routes.draw do
 
+  devise_for :users,
+             :path => '',
+             :path_names => {:sign_in => 'login', :sign_out => 'logout', :sign_up => 'register'}
+
   root :to => 'posts#index'
   get '/popular', to: 'posts#popular'
   get '/fresh', to: 'posts#fresh'
@@ -28,9 +32,6 @@ Smartcoding::Application.routes.draw do
     end
   end
 
-  get '/register', to: 'users#new'
-  get '/login', to: 'sessions#new'
-  get '/logout', to: 'sessions#destroy'
   get '/search', to: 'posts#search'
 
   # The priority is based upon order of creation:

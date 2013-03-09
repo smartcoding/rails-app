@@ -1,4 +1,13 @@
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :token_authenticatable, :confirmable,
+  # :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
+
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :email, :password, :password_confirmation, :remember_me
+
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :timelines, dependent: :destroy
@@ -11,18 +20,6 @@ class User < ActiveRecord::Base
                                    class_name: "Relationship",
                                    dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
-
-  attr_accessible :username, :password, :password_confirmation
-
-
-  has_secure_password
-
-  validates :username, presence: true, uniqueness: { case_sensitive: false },
-                       length: { in: 4..12 },
-                       format: { with: /^[a-z][a-z0-9]*$/,
-                                 message: 'can only contain lowecase letters and numbers' }
-  validates :password, length: { in: 4..8 }
-  validates :password_confirmation, length: { in: 4..8 }
 
   def your_posts(params)
     posts.paginate(page: params[:page], order: 'created_at DESC', per_page: 3)

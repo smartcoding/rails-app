@@ -1,15 +1,15 @@
 <% @timelines.each do |event| %>
   <% if( event.timelineable_type == "Relationship" ) %>
-    <p><%= event.timelineable.follower.username %> following
-    <%= event.timelineable.followed.username %></p>
+    <p><%= event.timelineable.follower.email %> following
+    <%= event.timelineable.followed.email %></p>
   <% elsif (event.timelineable_type == "Post") %>
-    <p><%= event.timelineable.user.username %> submitted post:
+    <p><%= event.timelineable.user.email %> submitted post:
     <%= event.timelineable.body %></p>
   <% elsif (event.timelineable_type == "Like") %>
-    <p><%= event.timelineable.user.username %> liked post:
+    <p><%= event.timelineable.user.email %> liked post:
     <%= event.timelineable.post.body %></p>
   <% elsif (event.timelineable_type == "Comment") %>
-    <p><%= event.timelineable.user.username %> commented: <%= event.timelineable.body %><br />
+    <p><%= event.timelineable.user.email %> commented: <%= event.timelineable.body %><br />
     For this post: <%= event.timelineable.post.body %></p>
   <% end %>
 <% end %>

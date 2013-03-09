@@ -1,6 +1,6 @@
-<% provide(:title, "Posts by #{@user.username}") %>
+<% provide(:title, "Posts by #{@user.email}") %>
 
-<h1>Posts by <%= @user.username %></h1>
+<h1>Posts by <%= @user.email %></h1>
 
 <% if @posts.any? %>
   <ul>
@@ -11,4 +11,4 @@
   <p>This user has not posted any posts yet</p>
 <% end %>
 
-<%= render 'follow_form' if logged_in? %>
+<%= render 'follow_form' if user_signed_in? %>

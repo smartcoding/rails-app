@@ -1,6 +1,6 @@
 <% @timelines.each do |event| %>
   <% if( event.timelineable_type == "Relationship" ) %>
-    <p>Following <%= event.timelineable.followed.username %></p>
+    <p>Following <%= event.timelineable.followed.email %></p>
   <% elsif (event.timelineable_type == "Post") %>
     <p>Submitted post: <%= event.timelineable.body %></p>
   <% elsif (event.timelineable_type == "Like") %>
