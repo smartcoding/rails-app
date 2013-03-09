@@ -1,0 +1,17 @@
+<ul>
+  <li><%= link_to "New Post", new_post_path %></li>
+  <% if current_or_guest_user? %>
+    <% if user_signed_in? %>
+      <li><%= link_to 'Your Posts', user_path(current_user) %></li>
+      <li><%= link_to 'Your Activity', activity_user_path(current_user) %></li>
+      <li><%= link_to "Edit Profile", edit_user_registration_path %></li>
+      <li><%= link_to "Logout (#{current_user.name})", destroy_user_session_path, method: :delete %></li>
+    <% else %>
+      <li>Scout, <%= link_to "become a member", new_user_registration_path %>
+      or <%= link_to "log in", new_user_session_path %></li>
+    <% end %>
+  <% else %>
+    <li><%= link_to "Sign up", new_user_registration_path %></li>
+    <li><%= link_to "Log in", new_user_session_path %></li>
+  <% end %>
+</ul>

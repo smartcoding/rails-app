@@ -1,15 +1,15 @@
 class RelationshipsController < ApplicationController
-  before_filter :authenticate_user!
-
   def create
-    @user = User.find(params[:id])
-    current_user.follow!(@user)
-    redirect_to @user
+    @user = User.find_by_username!(params[:id])
+    current_or_guest_user.follow!(@user) unless @user == current_or_guest_user
+    flash.keep
+    redirect_to request.referer
   end
 
   def destroy
-    @user = User.find(params[:id])
-    current_user.unfollow!(@user)
-    redirect_to @user
+    @user = User.find_by_username!(params[:id])
+    current_or_guest_user.unfollow!(@user)
+    flash.keep
+    redirect_to request.referer
   end
 end

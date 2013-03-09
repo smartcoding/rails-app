@@ -1,16 +1,27 @@
-<% @timelines.each do |event| %>
-  <% if( event.timelineable_type == "Relationship" ) %>
-    <p><%= event.timelineable.follower.email %> following
-    <%= event.timelineable.followed.email %></p>
-  <% elsif (event.timelineable_type == "Post") %>
-    <p><%= event.timelineable.user.email %> submitted post:
-    <%= event.timelineable.body %></p>
-  <% elsif (event.timelineable_type == "Like") %>
-    <p><%= event.timelineable.user.email %> liked post:
-    <%= event.timelineable.post.body %></p>
-  <% elsif (event.timelineable_type == "Comment") %>
-    <p><%= event.timelineable.user.email %> commented: <%= event.timelineable.body %><br />
-    For this post: <%= event.timelineable.post.body %></p>
+<% if @timelines && @timelines.count > 0 %>
+  <% @timelines.each do |event| %>
+    <% if( event.timelineable_type == "Relationship" ) %>
+      <p><%= event.timelineable.follower.email %> following
+      <%= event.timelineable.followed.email %></p>
+    <% elsif (event.timelineable_type == "Post") %>
+      <p><%= event.timelineable.user.email %> submitted post:
+      <%= event.timelineable.body %></p>
+    <% elsif (event.timelineable_type == "Like") %>
+      <p><%= event.timelineable.user.email %> liked post:
+      <%= event.timelineable.post.body %></p>
+    <% elsif (event.timelineable_type == "Comment") %>
+      <p><%= event.timelineable.user.email %> commented: <%= event.timelineable.body %><br />
+      For this post: <%= event.timelineable.post.body %></p>
+    <% end %>
   <% end %>
+  <%= will_paginate @timelines %>
+<% elsif @users && @users.count > 0 %>
+  Seems like you're not following anyone, start following someone:
+  <ul>
+    <% @users.each do |user| @user = user %>
+      <li><%= user.username %> - <%= render 'follow' %></li>
+    <% end %>
+  </ul>
+<% else %>
+  Seems like you're not following anyone and there is noone to follow..
 <% end %>
-<%= will_paginate @timelines %>

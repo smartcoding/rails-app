@@ -1,8 +1,6 @@
 <% provide(:title, 'View post') %>
 
-<% if user_signed_in? %>
-  <%= render 'posts/like_form' %>
-<% end %>
+<%= render 'posts/like_form' %>
 
 <p>Views: <%= @post.views_count %></p>
 
@@ -12,12 +10,7 @@
 
 <div id="post-comments">
   <h2>Post comment</h2>
-
-  <% if user_signed_in? %>
-    <%= render 'comments/comment_form' %>
-  <% else %>
-    <p>Please login to post comment</p>
-  <% end %>
+  <%= render 'comments/comment_form' %>
 </div><!-- end post-comments -->
 
 <div id="comments">

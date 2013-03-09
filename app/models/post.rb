@@ -6,7 +6,7 @@ class Post < ActiveRecord::Base
 
   is_impressionable :counter_cache => { :column_name => :views_count }
 
-  attr_accessible :body
+  attr_accessible :body, :user_id
 
   validates :body, presence: true, length: { minimum: 10 }
 

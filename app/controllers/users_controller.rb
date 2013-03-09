@@ -1,13 +1,8 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, only: [:following, :flow]
 
   def show
     @user = User.find_by_username!(params[:id])
     @posts = @user.your_posts(params)
-  end
-
-  def following
-    @posts = current_user.following_feed(params)
   end
 
   def activity
@@ -16,6 +11,11 @@ class UsersController < ApplicationController
   end
 
   def flow
-    @timelines = current_user.flow_feed(params)
+    @timelines = current_or_guest_user?.try(:flow_feed, params)
+    if @timelines.nil?
+      @users = User.where(guest: nil)
+    elsif @timelines.count == 0 && user_signed_in?
+      @users = User.where("guest = ? AND id <> ?", nil, current_user.id)
+    end
   end
 end

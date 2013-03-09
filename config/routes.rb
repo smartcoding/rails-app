@@ -6,7 +6,6 @@ Smartcoding::Application.routes.draw do
   root :to => 'posts#index'
   get '/popular', to: 'posts#popular'
   get '/fresh', to: 'posts#fresh'
-  get '/following', to: 'users#following'
   get '/flow', to: 'users#flow'
 
   resources :sessions, only: [:new, :create]

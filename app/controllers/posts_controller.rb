@@ -1,15 +1,10 @@
 class PostsController < ApplicationController
-  before_filter :authenticate_user!, only: [:new, :create, :edit, :update]
   impressionist :unique => [:impressionable_type, :impressionable_id,
                             :session_hash],
                 :actions => [:show]
 
   def index
-    if user_signed_in?
-      redirect_to following_url, :status => 302
-    else
-      redirect_to popular_url, :status => 302
-    end
+    redirect_to popular_url, :status => 302
   end
 
   def popular
@@ -27,9 +22,10 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = current_user.posts.build(params[:post])
+    @post = current_or_guest_user.posts.build(params[:post])
     if @post.save
       flash[:success] = 'Your post has been posted!'
+      flash.keep
       redirect_to @post
     else
       @posts = Post.latest(params)
@@ -43,14 +39,15 @@ class PostsController < ApplicationController
   end
 
   def edit
-    @post = current_user.posts.find(params[:id])
+    @post = current_or_guest_user.posts.find(params[:id])
   end
 
   def update
-    @post = current_user.posts.find(params[:id])
+    @post = current_or_guest_user.posts.find(params[:id])
 
     if @post.update_attributes(params[:post])
       flash[:success] = 'Your post was updated'
+      flash.keep
       redirect_to @post
     else
       render :edit

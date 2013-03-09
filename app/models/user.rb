@@ -3,13 +3,15 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation,
-                  :remember_me, :username
+                  :remember_me, :username, :guest
 
-  validates_presence_of :username
+  validates_presence_of :username, :email, :password, unless: :guest?
+  validates_uniqueness_of :username, :on => :create
+  validates_confirmation_of :password
 
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -36,10 +38,6 @@ class User < ActiveRecord::Base
     timelines.paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
   end
 
-  def following_feed(params)
-    Post.from_users_followed_by(self).paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
-  end
-
   def following?(other_user)
     self.relationships.find_by_followed_id(other_user.id)
   end
@@ -63,5 +61,59 @@ class User < ActiveRecord::Base
 
   def flow_feed(params)
     Timeline.from_users_followed_by(self).paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
+  end
+
+  def name
+    username || "Guest"
+  end
+
+  def move_to(user)
+    comments.each do |comment|
+      comment.update_attributes(user_id: user.id)
+      Timeline.where("timelineable_id = ? AND timelineable_type = ?",
+                     comment.id, comment.class.to_s)
+              .first!
+              .update_attributes(user_id: user.id)
+    end
+
+    likes.each do |like|
+      unless user.likes_post?(like.post) || user == like.post.user
+        user.add_like_to_post!(like.post)
+      end
+    end
+
+    posts.each do |post|
+      post.update_attributes(user_id: user.id)
+      Timeline.where("timelineable_id = ? AND timelineable_type = ?",
+                     post.id, post.class.to_s)
+              .first!
+              .update_attributes(user_id: user.id)
+    end
+
+    relationships.each do |relationship|
+      unless user.following?(relationship.followed) || relationship.followed == user
+        user.follow!(relationship.followed)
+      end
+    end
+
+    reverse_relationships.each do |relationship|
+      unless relationship.follower.following?(user) || relationship.follower == user
+        relationship.follower.follow!(user)
+      end
+    end
+  end
+
+  protected
+
+  def username_required?
+    true if guest.nil?
+  end
+
+  def email_required?
+    true if guest.nil?
+  end
+
+  def password_required?
+    true if guest.nil?
   end
 end
