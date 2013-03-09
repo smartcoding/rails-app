@@ -3,24 +3,12 @@ Smartcoding::Application.routes.draw do
   devise_for :users,
              :path => '',
              :path_names => {:sign_in => 'login', :sign_out => 'logout', :sign_up => 'register'}
-
   root :to => 'posts#index'
   get '/popular', to: 'posts#popular'
   get '/fresh', to: 'posts#fresh'
   get '/following', to: 'users#following'
   get '/flow', to: 'users#flow'
 
-  resources :users, only: [:show, :new, :create] do
-    member do
-      post 'follow', :controller => "relationships", :action => "create"
-    end
-    member do
-      delete 'unfollow', :controller => "relationships", :action => "destroy"
-    end
-    member do
-      get 'activity', :controller => "users", :action => "activity"
-    end
-  end
   resources :sessions, only: [:new, :create]
   resources :posts do
     resources :comments, only: [:create]
@@ -33,6 +21,18 @@ Smartcoding::Application.routes.draw do
   end
 
   get '/search', to: 'posts#search'
+
+  resources :users, :path => '/', only: [:show, :new, :create] do
+    member do
+      post 'follow', :controller => "relationships", :action => "create"
+    end
+    member do
+      delete 'unfollow', :controller => "relationships", :action => "destroy"
+    end
+    member do
+      get 'activity', :controller => "users", :action => "activity"
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!, only: [:following, :flow]
 
   def show
-    @user = User.find(params[:id])
+    @user = User.find_by_username!(params[:id])
     @posts = @user.your_posts(params)
   end
 
@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   end
 
   def activity
-    @user = User.find(params[:id])
+    @user = User.find_by_username!(params[:id])
     @timelines = @user.your_timelines(params)
   end
 

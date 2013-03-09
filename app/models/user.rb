@@ -24,6 +24,10 @@ class User < ActiveRecord::Base
                                    dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
 
+  def to_param
+    username
+  end
+
   def your_posts(params)
     posts.paginate(page: params[:page], order: 'created_at DESC', per_page: 3)
   end
