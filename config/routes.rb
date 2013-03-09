@@ -30,7 +30,7 @@ Smartcoding::Application.routes.draw do
 
   get '/register', to: 'users#new'
   get '/login', to: 'sessions#new'
-  match '/logout', to: 'sessions#destroy', via: :delete
+  get '/logout', to: 'sessions#destroy'
   get '/search', to: 'posts#search'
 
   # The priority is based upon order of creation:
