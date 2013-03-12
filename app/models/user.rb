@@ -9,9 +9,9 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation,
                   :remember_me, :username, :guest
 
-  validates_presence_of :username, :email, :password, unless: :guest?
+  validates_presence_of :email, :password
+  validates_uniqueness_of :email, :on => :create
   validates_uniqueness_of :username, :on => :create
-  validates_confirmation_of :password
 
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -101,6 +101,11 @@ class User < ActiveRecord::Base
         relationship.follower.follow!(user)
       end
     end
+  end
+
+  def self.find_for_database_authentication(conditions={})
+    self.where("username = ?", conditions[:email]).limit(1).first ||
+    self.where("email = ?", conditions[:email]).limit(1).first
   end
 
   protected
