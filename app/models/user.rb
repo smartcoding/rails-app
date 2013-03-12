@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation,
                   :remember_me, :username, :guest
 
-  validates_presence_of :email, :password
+  validates_presence_of :email, :password, unless: :guest_or_provider_exist?
   validates_uniqueness_of :email, :on => :create
   validates_uniqueness_of :username, :on => :create
 
@@ -124,6 +124,18 @@ class User < ActiveRecord::Base
     self.username = username
   end
 
+  def self.from_omniauth(auth)
+    where(auth.slice("provider", "uid")).first || create_from_omniauth(auth)
+  end
+
+  def self.create_from_omniauth(auth)
+    create! do |user|
+      user.provider = auth["provider"]
+      user.uid = auth["uid"]
+      user.email = auth["info"]["nickname"] + "@github_#{Time.now.to_i}.com"
+    end
+  end
+
   protected
 
   def username_required?
@@ -136,5 +148,11 @@ class User < ActiveRecord::Base
 
   def password_required?
     true if guest.nil?
+  end
+
+  private
+
+  def guest_or_provider_exist?
+    guest? || provider?
   end
 end

@@ -8,6 +8,9 @@ Smartcoding::Application.routes.draw do
   get '/fresh', to: 'posts#fresh'
   get '/flow', to: 'users#flow'
 
+  match 'auth/:provider/callback', to: 'users#omniauth'
+  match 'auth/failure', to: 'users#omniauth_fail'
+
   resources :sessions, only: [:new, :create]
   resources :posts do
     resources :comments, only: [:create]

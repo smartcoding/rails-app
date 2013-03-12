@@ -18,4 +18,16 @@ class UsersController < ApplicationController
       @users = User.where(guest: nil).where("id <> ?", current_user.id)
     end
   end
+
+  def omniauth
+    user = User.from_omniauth(env["omniauth.auth"])
+    sign_in(user)
+    flash[:hey] = "Congratulations! You've signed in as #{user.username}!"
+    redirect_to popular_path
+  end
+
+  def omniauth_fail
+    flash[:oops] = "Oops, did not went well this time.."
+    redirect_to login_path
+  end
 end
