@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email, :on => :create
   validates_uniqueness_of :username, :on => :create
 
+  before_validation :generate_username, :on => :create
+
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :timelines, dependent: :destroy
@@ -103,9 +105,23 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Override Devise authentication find method to allow logging in
+  # with username OR email
   def self.find_for_database_authentication(conditions={})
     self.where("username = ?", conditions[:email]).limit(1).first ||
     self.where("email = ?", conditions[:email]).limit(1).first
+  end
+
+  # Generate username if it's not provided
+  def generate_username
+    return unless self.username.blank?
+    username = login_part = self.email.split("@").first
+    num = 2
+    while( !User.find_by_username(username).nil? )
+      username = "#{login_part}#{num}"
+      num += 2
+    end
+    self.username = username
   end
 
   protected
