@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     if @timelines.nil?
       @users = User.where(guest: nil)
     elsif @timelines.count == 0 && user_signed_in?
-      @users = User.where("guest = ? AND id <> ?", nil, current_user.id)
+      @users = User.where(guest: nil).where("id <> ?", current_user.id)
     end
   end
 end
