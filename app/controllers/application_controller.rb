@@ -49,6 +49,17 @@ class ApplicationController < ActionController::Base
       nil
   end
 
+  protected
+
+  # called as before_filter in
+  # omniauth_email_controller and omniauth_password_controller
+  def verify_omniauth_session
+    @attributes = session["devise.user_attributes"]
+    if @attributes.nil?
+      redirect_to root_path
+    end
+  end
+
   private
 
   # called (once) when the user logs in, insert any code your application needs

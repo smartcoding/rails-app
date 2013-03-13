@@ -4,6 +4,7 @@ class PostsController < ApplicationController
                 :actions => [:show]
 
   def index
+    flash.keep
     redirect_to popular_url, :status => 302
   end
 

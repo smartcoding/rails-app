@@ -1,0 +1,2 @@
+module OmniauthPasswordHelper
+end

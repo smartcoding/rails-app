@@ -2,17 +2,21 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :omniauthable,
          :recoverable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation,
-                  :remember_me, :username, :guest
+                  :remember_me, :username, :guest,
+                  :provider, :uid
 
-  validates_presence_of :email, :password, unless: :guest_or_provider_exist?
+  validates_presence_of :email
+  validates :email, :format => { :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create }
+  validates_presence_of :password, if: :password_required?
   validates_uniqueness_of :email, :on => :create
   validates_uniqueness_of :username, :on => :create
 
+  before_validation :generate_username_from_email, :on => :create
   before_validation :generate_username, :on => :create
 
   has_many :posts, dependent: :destroy
@@ -113,7 +117,7 @@ class User < ActiveRecord::Base
   end
 
   # Generate username if it's not provided
-  def generate_username
+  def generate_username_from_email
     return unless self.username.blank?
     username = login_part = self.email.split("@").first
     num = 2
@@ -124,35 +128,51 @@ class User < ActiveRecord::Base
     self.username = username
   end
 
-  def self.from_omniauth(auth)
-    where(auth.slice("provider", "uid")).first || create_from_omniauth(auth)
+  # Generate username if it's already in use
+  def generate_username
+    username = login_part = self.username
+    num = 2
+    while( !User.find_by_username(username).nil? )
+      username = "#{login_part}#{num}"
+      num += 2
+    end
+    self.username = username
   end
 
-  def self.create_from_omniauth(auth)
-    create! do |user|
-      user.provider = auth["provider"]
-      user.uid = auth["uid"]
-      user.email = auth["info"]["nickname"] + "@github_#{Time.now.to_i}.com"
+  # return existing user associated with omniauth provider user
+  # if not found - create new one and return
+  def self.from_omniauth(auth)
+    user = where(auth.slice(:provider, :uid)).first
+    if user.nil?
+      user = new({provider: auth.provider,
+                  uid: auth.uid,
+                  username: auth.info.nickname,
+                  email: auth.info.email}, :without_protection => true)
+      user.save
+    end
+    user
+  end
+
+  def self.new_with_session(params, session)
+    if session["devise.user_attributes"]
+      new(session["devise.user_attributes"], without_protection: true) do |user|
+        user.attributes = params
+        user.valid?
+      end
+    else
+      super
     end
   end
 
-  protected
-
-  def username_required?
-    true if guest.nil?
-  end
-
-  def email_required?
-    true if guest.nil?
-  end
-
   def password_required?
-    true if guest.nil?
+    !guest? && !provider?
   end
 
-  private
-
-  def guest_or_provider_exist?
-    guest? || provider?
+  def update_with_password(params, *options)
+    if encrypted_password.blank?
+      update_attributes(params, *options)
+    else
+      super
+    end
   end
 end

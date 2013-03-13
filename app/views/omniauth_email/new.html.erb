@@ -1,0 +1,10 @@
+<%= form_tag auth_email_path do %>
+  <%= render 'common/form_errors', object: @user %>
+
+  <p>
+    <%= label_tag :email, 'Email' %><br />
+    <%= email_field_tag :email %><br />
+    <%= submit_tag 'Verify' %>
+  </p>
+<% end %>
+

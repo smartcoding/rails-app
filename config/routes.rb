@@ -1,17 +1,19 @@
 Smartcoding::Application.routes.draw do
 
+  get '/auth/email', to: 'omniauth_email#new'
+  post '/auth/email', to: 'omniauth_email#create'
+  get '/auth/login', to: 'omniauth_password#new'
+  post '/auth/login', to: 'omniauth_password#create'
+
   devise_for :users,
              :path => '',
-             :path_names => {:sign_in => 'login', :sign_out => 'logout', :sign_up => 'register'}
+             :path_names => {:sign_in => 'login', :sign_out => 'logout', :sign_up => 'register'},
+             :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
   root :to => 'posts#index'
   get '/popular', to: 'posts#popular'
   get '/fresh', to: 'posts#fresh'
   get '/flow', to: 'users#flow'
 
-  match 'auth/:provider/callback', to: 'users#omniauth'
-  match 'auth/failure', to: 'users#omniauth_fail'
-
-  resources :sessions, only: [:new, :create]
   resources :posts do
     resources :comments, only: [:create]
     member do
