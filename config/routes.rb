@@ -8,7 +8,8 @@ Smartcoding::Application.routes.draw do
   devise_for :users,
              :path => '',
              :path_names => {:sign_in => 'login', :sign_out => 'logout', :sign_up => 'register'},
-             :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
+             :controllers => {:omniauth_callbacks => "omniauth_callbacks",
+                              :registrations => "registrations"}
   root :to => 'posts#index'
   get '/popular', to: 'posts#popular'
   get '/fresh', to: 'posts#fresh'
