@@ -8,6 +8,14 @@
 </head>
 <body>
 
+<% if current_user %>
+  <% if !current_user.confirmed? %>
+    <%= render 'common/email_confirmation_reminder' %>
+  <% elsif current_user.pending_reconfirmation? %>
+    <%= render 'common/email_reconfirmation_reminder' %>
+  <% end %>
+<% end %>
+
 <div id="container">
   <div id="header">
     <%= link_to "Smartcoding", root_path %>

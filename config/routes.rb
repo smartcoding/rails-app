@@ -9,7 +9,8 @@ Smartcoding::Application.routes.draw do
              :path => '',
              :path_names => {:sign_in => 'login', :sign_out => 'logout', :sign_up => 'register'},
              :controllers => {:omniauth_callbacks => "omniauth_callbacks",
-                              :registrations => "registrations"}
+                              :registrations => "registrations",
+                              :confirmations => "confirmations"}
   root :to => 'posts#index'
   get '/popular', to: 'posts#popular'
   get '/fresh', to: 'posts#fresh'

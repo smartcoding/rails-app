@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :omniauthable,
-         :recoverable, :rememberable, :trackable
+         :recoverable, :rememberable, :trackable, :confirmable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation,
@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of :email
   validates :email, :format => { :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create }
-  validates_presence_of :password, if: :password_required?
+  validates_presence_of :password, :on => :create, if: :password_required?
   validates_confirmation_of :password, :on => :update
   validates_uniqueness_of :email, :on => :create
   validates_uniqueness_of :username, :on => :create
