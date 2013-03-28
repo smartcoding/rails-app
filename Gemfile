@@ -8,6 +8,9 @@ gem 'devise'
 gem 'omniauth-github'
 gem 'certified'
 
+gem "rugged", :git => "git://github.com/sergeylukin/rugged.git",
+              :branch => "gnu-make-bsd", :submodules => true
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
