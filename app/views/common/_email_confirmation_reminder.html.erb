@@ -1,6 +1,6 @@
 <%= form_for(current_user, :url => confirmation_path(current_user),
              :html => { :method => :post }) do |f| %>
-  <strong>Your account is inactive.</strong>
+  Confirm your email address to access all of features.
   We have sent an activation link.
   You can change the email address or resend it again:
   <%= f.email_field :email %>
