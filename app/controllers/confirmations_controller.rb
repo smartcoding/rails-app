@@ -2,9 +2,16 @@ class ConfirmationsController < Devise::ConfirmationsController
 
   def create
     if signed_in?
-      current_user.update_column(:email, params[:user][:email])
+      if User.find_by_email(params[:user][:email]).nil?
+        current_user.update_column(:email, params[:user][:email])
+        super
+      else
+        flash[:notice] = "Email is already taken"
+        redirect_to :back
+      end
+    else
+      super
     end
-    super
   end
 
   protected
