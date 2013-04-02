@@ -8,6 +8,8 @@ gem 'devise'
 gem 'omniauth-github'
 gem 'certified'
 
+gem "simple_enum", "~> 1.6.4"
+
 gem "rugged", :git => "git://github.com/sergeylukin/rugged.git",
               :branch => "gnu-make-bsd", :submodules => true
 
