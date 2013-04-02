@@ -3,6 +3,8 @@ class PostsController < ApplicationController
                             :session_hash],
                 :actions => [:show]
 
+  before_filter :verify_selected_post_type, :only => [:new]
+
   def index
     flash.keep
     redirect_to popular_url, :status => 302
@@ -24,8 +26,8 @@ class PostsController < ApplicationController
 
   def create
     @post = current_or_guest_user.posts.build(params[:post])
-    if @post.save
-      flash[:success] = 'Your post has been posted!'
+    if @post.save and @post.create_repository
+      flash[:success] = "Your #{@post.type.to_s} has been posted!"
       flash.keep
       redirect_to @post
     else
@@ -57,5 +59,12 @@ class PostsController < ApplicationController
 
   def search
     @posts = Post.search(params)
+  end
+
+  private 
+
+  def verify_selected_post_type
+    @type = params[:type]
+    redirect_to new_post_path(:type => Post.types.first[0]) if Post.types[@type].nil?
   end
 end

@@ -1,9 +1,13 @@
 <%= form_for(@post) do |f| %>
   <%= render 'common/form_errors', object: @post %>
+  <%= f.hidden_field :type, :value => @type %>
 
   <p>
-    <%= f.label :body, 'Post' %><br />
     <%= f.text_area :body %><br />
-    <%= f.submit 'Submit a Post' %>
+    <% if ['problem', 'question'].include? @type %>
+      <%= f.text_area :additional_body %><br />
+    <% end %>
+    <%= f.submit "Submit a #{@type.capitalize}" %>
   </p>
+
 <% end %>
