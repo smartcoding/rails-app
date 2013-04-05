@@ -1,5 +1,17 @@
 <% provide(:title, 'View post') %>
 
+<p><%= @body %></p>
+
+<p><%= @answer %></p>
+
+<p><%= @solution %></p>
+
+<p>Tags:
+<%= @tags %></p>
+
+<p>Origins:
+<%= @origins %></p>
+
 <%= render 'posts/like_form' %>
 
 <p>Views: <%= @post.views_count %></p>

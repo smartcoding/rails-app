@@ -43,18 +43,33 @@ class Post < ActiveRecord::Base
   def create_repository
     require 'rugged'
 
-    repo = Rugged::Repository.init_at './posts/stuff', true
-
-    oid = repo.write(self.to_s, :blob)
+    repo = Rugged::Repository.init_at "./posts/#{self.id}", true
     index = Rugged::Index.new
+
+    oid = repo.write(self.body, :blob)
+    index.add(:path => "#{self.type.to_s}.md", :oid => oid, :mode => 0100644)
+
+    if self.type.to_s === 'problem'
+      oid = repo.write(self.additional_body, :blob)
+      index.add(:path => "solution.md", :oid => oid, :mode => 0100644)
+    end
+    if self.type.to_s === 'question'
+      oid = repo.write(self.additional_body, :blob)
+      index.add(:path => "answer.md", :oid => oid, :mode => 0100644)
+    end
+
+    oid = repo.write('README file contents here', :blob)
     index.add(:path => "README.md", :oid => oid, :mode => 0100644)
+
+    oid = repo.write("---\ntags: [TAG1, TAG2]\norigins: [ORIGIN1, ORIGIN2]", :blob)
+    index.add(:path => "META.yml", :oid => oid, :mode => 0100644)
 
     options = {}
     options[:tree] = index.write_tree(repo)
 
     options[:author] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
     options[:committer] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
-    options[:message] ||= "Making a commit via Rugged!"
+    options[:message] ||= "Initial commit"
     options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
     options[:update_ref] = 'HEAD'
 

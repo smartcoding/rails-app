@@ -38,6 +38,25 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
+
+    require 'rugged'
+    repo = Rugged::Repository.new "./posts/#{params[:id]}"
+    master = repo.lookup Rugged::Branch.lookup(repo, "master").target
+
+    master.tree.each_blob do |b|
+      @body = repo.lookup(b[:oid]).content if b[:name] === "#{@post.type.to_s}.md"
+      @answer = repo.lookup(b[:oid]).content if b[:name] === "answer.md"
+      @solution = repo.lookup(b[:oid]).content if b[:name] === "solution.md"
+      @meta = repo.lookup(b[:oid]).content if b[:name] === "META.yml"
+    end
+
+    require 'yaml'
+    if @meta
+      yaml = YAML.load @meta
+      @tags = yaml["tags"]
+      @origins = yaml["origins"]
+    end
+
     @comment = Comment.new
   end
 
