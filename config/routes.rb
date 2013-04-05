@@ -16,8 +16,10 @@ Smartcoding::Application.routes.draw do
   get '/fresh', to: 'posts#fresh'
   get '/flow', to: 'users#flow'
 
-  get '/tags/:tag', to: 'posts#popular', as: :tag
-  get '/origins/:origin', to: 'posts#popular', as: :origin
+  get '/tags/:tag', to: 'posts#popular', as: :tag,
+      :tag => /[\w\.%]+?/, :format => /html|json/
+  get '/origins/:origin', to: 'posts#popular', as: :origin,
+      :origin => /[\w\.%]+?/, :format => /html|json/
 
   resources :posts do
     resources :comments, only: [:create]

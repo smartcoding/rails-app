@@ -23,6 +23,12 @@ class Post < ActiveRecord::Base
 
   validates :body, presence: true, length: { minimum: 10 }
 
+  validates :tag_list, presence: true, :length => { minimum: 1, maximum: 5 }
+  validate :validate_tags
+  validate :validate_origins
+  validates_format_of [:origin_list, :tag_list], :with => /\A[\w\d\s\.,]+\Z/,
+                      :message => 'contains wrong characters'
+
   after_create :add_to_timeline, :increment_author_posts_counter
   after_destroy :decrement_author_posts_counter
 
@@ -94,5 +100,19 @@ class Post < ActiveRecord::Base
 
   def decrement_author_posts_counter
     user.decrement( :posts_count ).save :validate => false
+  end
+
+  def validate_tags
+    for tag in tag_list
+      errors.add(:tag, "too long (maximum is 15 characters)") if tag.length > 15
+      errors.add(:tag, "too short (minumum is 2 characters)") if tag.length < 2
+    end
+  end
+
+  def validate_origins
+    for tag in origin_list
+      errors.add(:origin, "too long (maximum is 20 characters)") if tag.length > 20
+      errors.add(:origin, "too short (minumum is 2 characters)") if tag.length < 2
+    end
   end
 end

@@ -20,8 +20,8 @@
 
 <p><%= @post.body %></p>
 
-<p>Tags: <%= raw @post.tag_list.map { |t| link_to t, tag_path(t) }.join(', ') %></p>
-<p>Origins: <%= raw @post.origin_list.map { |t| link_to t, tag_path(t) }.join(', ') %></p>
+<p>Tags: <%= raw @post.tag_list.map { |t| link_to t, tag_path(u t.downcase) }.join(', ') %></p>
+<p>Origins: <%= raw @post.origin_list.map { |t| link_to t, origin_path(u t.downcase) }.join(', ') %></p>
 
 <div id="post-comments">
   <h2>Post comment</h2>

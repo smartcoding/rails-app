@@ -12,7 +12,7 @@ class PostsController < ApplicationController
 
   def popular
     if params[:tag]
-      @posts = Post.tagged_with(params[:tag]).popular(params)
+      @posts = Post.tagged_with(params[:tag], on: :tags).popular(params)
     elsif params[:origin]
       @posts = Post.tagged_with(params[:origin], on: :origins).popular(params)
     else
@@ -37,8 +37,8 @@ class PostsController < ApplicationController
       flash.keep
       redirect_to @post
     else
-      flash[:notice] = "Something went wrong"
-      redirect_to :back
+      @category = @post.category
+      render 'posts/new'
     end
   end
 
