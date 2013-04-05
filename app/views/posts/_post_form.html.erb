@@ -1,13 +1,13 @@
 <%= form_for(@post) do |f| %>
   <%= render 'common/form_errors', object: @post %>
-  <%= f.hidden_field :type, :value => @type %>
+  <%= f.hidden_field :category, :value => @category %>
 
   <p>
     <%= f.text_area :body %><br />
-    <% if ['problem', 'question'].include? @type %>
+    <% if ['problem', 'question'].include? @category %>
       <%= f.text_area :additional_body %><br />
     <% end %>
-    <%= f.submit "Submit a #{@type.capitalize}" %>
+    <%= f.submit "Submit a #{@category.capitalize}" %>
   </p>
 
 <% end %>

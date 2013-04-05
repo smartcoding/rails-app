@@ -5,17 +5,19 @@ class Post < ActiveRecord::Base
   has_many :timelines, :as => :timelineable, dependent: :destroy
 
   # gaining with simple_enum Gem here..
-  as_enum :type, { :tip       => 1,
-                   :quote     => 2,
-                   :fact      => 3,
-                   :problem   => 4,
-                   :question  => 5 },
-          :prefix => true
-  validates_as_enum :type
+  as_enum :category, { :tip       => 1,
+                       :quote     => 2,
+                       :fact      => 3,
+                       :problem   => 4,
+                       :question  => 5 },
+          # Use "is_" prefix so that category could be
+          # accessed via post.is_tip? or post.is_quote!
+          :prefix => 'is'
+  validates_as_enum :category
 
   is_impressionable :counter_cache => { :column_name => :views_count }
 
-  attr_accessible :body, :additional_body, :user_id, :type
+  attr_accessible :body, :additional_body, :user_id, :category
 
   validates :body, presence: true, length: { minimum: 10 }
 
@@ -47,13 +49,13 @@ class Post < ActiveRecord::Base
     index = Rugged::Index.new
 
     oid = repo.write(self.body, :blob)
-    index.add(:path => "#{self.type.to_s}.md", :oid => oid, :mode => 0100644)
+    index.add(:path => "#{self.category.to_s}.md", :oid => oid, :mode => 0100644)
 
-    if self.type.to_s === 'problem'
+    if self.category.to_s === 'problem'
       oid = repo.write(self.additional_body, :blob)
       index.add(:path => "solution.md", :oid => oid, :mode => 0100644)
     end
-    if self.type.to_s === 'question'
+    if self.category.to_s === 'question'
       oid = repo.write(self.additional_body, :blob)
       index.add(:path => "answer.md", :oid => oid, :mode => 0100644)
     end

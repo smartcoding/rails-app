@@ -1,4 +1,4 @@
-<% Post.types_for_select.each do |t| %>
-  <%= link_to t[0], new_post_path(:type => t[1]) %>
+<% Post.categories_for_select.each do |t| %>
+  <%= link_to t[0], new_post_path(:category => t[1]) %>
 <% end %>
 <%= render "post_form" %>
