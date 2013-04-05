@@ -4,6 +4,8 @@ class Post < ActiveRecord::Base
   has_many :likes, dependent: :destroy
   has_many :timelines, :as => :timelineable, dependent: :destroy
 
+  acts_as_ordered_taggable_on :tags, :origins
+
   # gaining with simple_enum Gem here..
   as_enum :category, { :tip       => 1,
                        :quote     => 2,
@@ -17,7 +19,7 @@ class Post < ActiveRecord::Base
 
   is_impressionable :counter_cache => { :column_name => :views_count }
 
-  attr_accessible :body, :additional_body, :user_id, :category
+  attr_accessible :body, :additional_body, :user_id, :category, :tag_list, :origin_list
 
   validates :body, presence: true, length: { minimum: 10 }
 
@@ -63,7 +65,7 @@ class Post < ActiveRecord::Base
     oid = repo.write('README file contents here', :blob)
     index.add(:path => "README.md", :oid => oid, :mode => 0100644)
 
-    oid = repo.write("---\ntags: [TAG1, TAG2]\norigins: [ORIGIN1, ORIGIN2]", :blob)
+    oid = repo.write("tags: [#{self.tag_list.to_s}]\norigins: [#{self.origin_list.to_s}]", :blob)
     index.add(:path => "META.yml", :oid => oid, :mode => 0100644)
 
     options = {}

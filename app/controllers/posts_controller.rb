@@ -11,7 +11,13 @@ class PostsController < ApplicationController
   end
 
   def popular
-    @posts = Post.popular(params)
+    if params[:tag]
+      @posts = Post.tagged_with(params[:tag]).popular(params)
+    elsif params[:origin]
+      @posts = Post.tagged_with(params[:origin], on: :origins).popular(params)
+    else
+      @posts = Post.popular(params)
+    end
     render :posts
   end
 
@@ -31,8 +37,8 @@ class PostsController < ApplicationController
       flash.keep
       redirect_to @post
     else
-      @posts = Post.latest(params)
-      render :index
+      flash[:notice] = "Something went wrong"
+      redirect_to :back
     end
   end
 
