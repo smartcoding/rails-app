@@ -1,16 +1,2 @@
 <% provide(:title, 'Edit post') %>
-
-<h1>Edit your post</h1>
-
-<%= form_for (@post) do |f| %>
-
-  <%= render 'common/form_errors', object: @post %>
-
-  <p>
-    <%= f.label :body %>
-    <%= f.text_area :body %>
-  </p>
-
-  <p><%= f.submit 'Save changes' %></p>
-
-<% end %>
+<%= render "post_form" %>

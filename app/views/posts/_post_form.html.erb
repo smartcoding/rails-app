@@ -1,29 +1,14 @@
-<%= form_for(@post) do |f| %>
-  <%= render 'common/form_errors', object: @post %>
-  <%= f.hidden_field :category, :value => @category %>
-
-  <p>
-    <%= f.text_area :body %>
-  </p>
-
-  <p>
-    <% if ['problem', 'question'].include? @category %>
-      <%= f.text_area :additional_body %><br />
+<%= semantic_form_for(@post) do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :category, as: :hidden, input_html: { :value => @post.category } %>
+    <%= f.input :body %>
+    <% if ['problem', 'question'].include? @post.category %>
+      <%= f.input :additional_body %><br />
     <% end %>
-  </p>
-
-  <p>
-    <%= f.label :tag_list, 'Tags (separated by commas)' %><br />
-    <%= f.text_field :tag_list %>
-  </p>
-
-  <p>
-    <%= f.label :origin_list, 'Origins (separated by commas)' %><br />
-    <%= f.text_field :origin_list %>
-  </p>
-
-  <p>
-    <%= f.submit "Submit a #{@category.capitalize}" %>
-  </p>
-
+    <%= f.input :tag_list %>
+    <%= f.input :origin_list %>
+  <% end %>
+  <%= f.actions do %>
+    <%= f.action :submit, :as => :button %>
+  <% end %>
 <% end %>

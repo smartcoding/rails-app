@@ -28,6 +28,7 @@ class PostsController < ApplicationController
 
   def new
     @post = Post.new
+    @post.category = @category
   end
 
   def create
@@ -37,7 +38,6 @@ class PostsController < ApplicationController
       flash.keep
       redirect_to @post
     else
-      @category = @post.category
       render 'posts/new'
     end
   end
@@ -74,9 +74,9 @@ class PostsController < ApplicationController
     @post = current_or_guest_user.posts.find(params[:id])
 
     if @post.update_attributes(params[:post])
-      flash[:success] = 'Your post was updated'
+      flash[:success] = "The #{@post.category.to_s} was updated"
       flash.keep
-      redirect_to @post
+      redirect_to edit_post_path @post
     else
       render :edit
     end
@@ -90,6 +90,8 @@ class PostsController < ApplicationController
 
   def verify_selected_post_category
     @category = params[:category]
-    redirect_to new_post_path(:category => Post.categories.first[0]) if Post.categories[@category].nil?
+    if Post.categories[ @category ].nil?
+      redirect_to new_post_path(:category => Post.categories.first[0])
+    end
   end
 end
