@@ -10,6 +10,7 @@ gem 'certified'
 
 gem 'simple_enum', '~> 1.6.4'
 gem 'acts-as-taggable-on', '~> 2.3.1'
+gem 'formtastic'
 
 gem "rugged", :git => "git://github.com/sergeylukin/rugged.git",
               :branch => "gnu-make-bsd", :submodules => true
