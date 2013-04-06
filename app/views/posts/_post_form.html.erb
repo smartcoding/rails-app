@@ -5,8 +5,12 @@
     <% if ['problem', 'question'].include? @post.category %>
       <%= f.input :additional_body %><br />
     <% end %>
-    <%= f.input :tag_list %>
-    <%= f.input :origin_list %>
+    <%= f.input :tag_list, input_html: { :data => {
+                             :feed_url => '/tags.json',
+                             :placeholder => 'type in related tags' } } %>
+    <%= f.input :origin_list, input_html: { :data => {
+                                :feed_url => '/origins.json',
+                                :placeholder => 'give credit to original source' } } %>
   <% end %>
   <%= f.actions do %>
     <%= f.action :submit, :as => :button %>

@@ -21,6 +21,11 @@ Smartcoding::Application.routes.draw do
   get '/origins/:origin', to: 'posts#popular', as: :origin,
       :origin => /[\w\.%]+?/, :format => /html|json/
 
+  get '/tags.json', to: 'posts#tags', :tag_type => :tags, as: :origins,
+      :format => :json
+  get '/origins.json', to: 'posts#tags', :tag_type => :origins, as: :origins,
+      :format => :json
+
   resources :posts do
     resources :comments, only: [:create]
     member do

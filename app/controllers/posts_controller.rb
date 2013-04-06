@@ -21,6 +21,24 @@ class PostsController < ApplicationController
     render :posts
   end
 
+  # Render /origins.json and /tags.json
+  def tags
+    tags = Post.tag_counts_on(params[:tag_type])
+                .where("name like ?", "%#{params[:q]}%")
+                .paginate(page: params[:page],
+                          order: 'name ASC',
+                          per_page: params[:per_page])
+
+    respond_to do |format|
+      format.json {
+        render :json => {
+          :total => tags.count,
+          :result => tags
+        }
+      }
+    end
+  end
+
   def fresh
     @posts = Post.latest(params)
     render :posts
