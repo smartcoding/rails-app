@@ -34,7 +34,13 @@ jQuery ->
       results: (data, page) -> # parse the results into the format expected by Select2.
         more = (page * 10) < data.total
 
-        results: data.result
+        tags_objects = []
+        $(data.result).each (index, value) ->
+          tags_objects.push
+            id: value
+            name: value
+
+        results: tags_objects
         more: more
     formatResult: format
     formatSelection: format
