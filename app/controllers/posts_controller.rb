@@ -103,7 +103,7 @@ class PostsController < ApplicationController
         render :edit
       end
     else
-      if @post.submit_pull_request(params[:post])
+      if @post.submit_pull_request(current_or_guest_user, params[:post])
         flash[:success] = "Your changes were submitted for moderation"
         flash.keep
         redirect_to edit_post_path @post

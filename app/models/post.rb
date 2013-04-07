@@ -84,8 +84,30 @@ class Post < ActiveRecord::Base
     Rugged::Commit.create(repo, options)
   end
 
-  def submit_pull_request(params)
-    return true
+  def submit_pull_request(user, params)
+    require 'rugged'
+
+    repo = Rugged::Repository.new "./posts/#{self.id}"
+    master = Rugged::Branch.lookup(repo, "master")
+
+    builder = Rugged::Tree::Builder.new(master.tip.tree)
+
+    body_oid = repo.write(params[:body], :blob)
+    builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
+
+    meta_oid = repo.write("tags: [#{params[:tag_list]}]\norigins: [#{params[:origin_list]}]", :blob)
+    builder << { :type => :blob, :name => "META.yml", :oid => meta_oid, :filemode => 0100644 }
+
+    options = {}
+    options[:tree] = builder.write(repo)
+
+    options[:author] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
+    options[:committer] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
+    options[:message] ||= "Changing commit from user ##{user.id}"
+    options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
+
+    commit = Rugged::Commit.create(repo, options)
+    branch = repo.create_branch("#{user.id}-#{rand(36*3).to_s(36)}", commit)
   end
 
   def commit_changes(params)
