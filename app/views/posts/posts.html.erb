@@ -15,7 +15,7 @@
 <div id="posts">
   <% if @posts.any? %>
     <ul><%= render @posts %></ul>
-    <%= will_paginate %>
+    <%= will_paginate @posts %>
   <% else %>
     <p>No posts found</p>
   <% end %>

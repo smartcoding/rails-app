@@ -1,5 +1,9 @@
 Smartcoding::Application.routes.draw do
 
+  get "tags/index"
+
+  get "tags/show"
+
   get '/auth/email', to: 'omniauth_email#new'
   post '/auth/email', to: 'omniauth_email#create'
   get '/auth/login', to: 'omniauth_password#new'
@@ -16,14 +20,14 @@ Smartcoding::Application.routes.draw do
   get '/fresh', to: 'posts#fresh'
   get '/flow', to: 'users#flow'
 
-  get '/tags/:tag', to: 'posts#popular', as: :tag,
+  get '/tags/:tag', to: 'tags#show', as: :tag,
       :tag => /[\w\.%]+?/, :format => /html|json/
-  get '/origins/:origin', to: 'posts#popular', as: :origin,
+  get '/origins/:origin', to: 'tags#show', as: :origin,
       :origin => /[\w\.%]+?/, :format => /html|json/
 
-  get '/tags.json', to: 'posts#tags', :tag_type => :tags, as: :origins,
+  get '/tags.json', to: 'tags#index', :tag_type => :tags, as: :origins,
       :format => :json
-  get '/origins.json', to: 'posts#tags', :tag_type => :origins, as: :origins,
+  get '/origins.json', to: 'tags#index', :tag_type => :origins, as: :origins,
       :format => :json
 
   resources :posts do
