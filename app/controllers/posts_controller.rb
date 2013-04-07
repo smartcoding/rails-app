@@ -88,18 +88,28 @@ class PostsController < ApplicationController
   end
 
   def edit
-    @post = current_or_guest_user.posts.find(params[:id])
+    @post = Post.find(params[:id])
   end
 
   def update
-    @post = current_or_guest_user.posts.find(params[:id])
+    @post = Post.find(params[:id])
 
-    if @post.update_attributes(params[:post])
-      flash[:success] = "The #{@post.category.to_s} was updated"
-      flash.keep
-      redirect_to edit_post_path @post
+    if @post.user === current_or_guest_user
+      if @post.update_attributes(params[:post]) and @post.commit_changes(params[:post])
+        flash[:success] = "The #{@post.category.to_s} was updated"
+        flash.keep
+        redirect_to edit_post_path @post
+      else
+        render :edit
+      end
     else
-      render :edit
+      if @post.submit_pull_request(params[:post])
+        flash[:success] = "Your changes were submitted for moderation"
+        flash.keep
+        redirect_to edit_post_path @post
+      else
+        render :edit
+      end
     end
   end
 

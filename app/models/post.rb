@@ -84,6 +84,36 @@ class Post < ActiveRecord::Base
     Rugged::Commit.create(repo, options)
   end
 
+  def submit_pull_request(params)
+    return true
+  end
+
+  def commit_changes(params)
+    require 'rugged'
+
+    repo = Rugged::Repository.new "./posts/#{self.id}"
+    master = repo.lookup Rugged::Branch.lookup(repo, "master").target
+
+    builder = Rugged::Tree::Builder.new(master.tree)
+
+    body_oid = repo.write(self.body, :blob)
+    builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
+
+    meta_oid = repo.write("tags: [#{self.tag_list.to_s}]\norigins: [#{self.origin_list.to_s}]", :blob)
+    builder << { :type => :blob, :name => "META.yml", :oid => meta_oid, :filemode => 0100644 }
+
+    options = {}
+    options[:tree] = builder.write(repo)
+
+    options[:author] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
+    options[:committer] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
+    options[:message] ||= "Changing commit"
+    options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
+    options[:update_ref] = 'HEAD'
+
+    Rugged::Commit.create(repo, options)
+  end
+
   private
 
   def add_to_timeline
