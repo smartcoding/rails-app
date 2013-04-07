@@ -61,6 +61,7 @@ GEM
       multipart-post (~> 1.1)
     formtastic (2.2.1)
       actionpack (>= 3.0)
+    git (1.2.5)
     hashie (1.2.0)
     hike (1.2.1)
     httpauth (0.2.0)
@@ -165,6 +166,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   devise
   formtastic
+  git (~> 1.2.5)
   impressionist (= 1.2.0)
   jquery-rails
   omniauth-github

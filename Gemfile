@@ -13,8 +13,11 @@ gem 'acts-as-taggable-on', '~> 2.3.1'
 gem 'formtastic'
 gem 'select2-rails'
 
+# solid solution for reading and wrigin to repos
 gem "rugged", :git => "git://github.com/sergeylukin/rugged.git",
               :branch => "gnu-make-bsd", :submodules => true
+# fallback solution for diffing and merging
+gem "git", "~> 1.2.5"
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
