@@ -89,6 +89,23 @@ class PostsController < ApplicationController
     @posts = Post.search(params)
   end
 
+  def pull
+    g = Git.bare "./posts/#{params[:id]}"
+    diff = g.diff('master', params[:pull_id])
+    render :text => diff.patch
+  end
+
+  def pull_merge
+    g = Git.bare "./posts/#{params[:id]}"
+    g.with_temp_working do
+      g.config('user.name', 'Robot')
+      g.config('user.email', 'email@email.com')
+      g.reset_hard 'master'
+      g.merge(params[:pull_id], "Merge pull request ##{params[:pull_id]}")
+    end
+    render :text => 'Merged!' and return
+  end
+
   private 
 
   def verify_selected_post_category

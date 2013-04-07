@@ -38,6 +38,10 @@ Smartcoding::Application.routes.draw do
     member do
       delete 'unlike', :controller => "likes", :action => "destroy"
     end
+    member do
+      get 'pull/:pull_id', :action => "pull"
+      get 'pull/:pull_id/merge', :action => "pull_merge"
+    end
   end
 
   get '/search', to: 'posts#search'
