@@ -48,8 +48,7 @@ class Post < ActiveRecord::Base
     where("user_id IN (?)", user.followed_user_ids)
   end
 
-  def create_repository
-    require 'rugged'
+  def create_repository(user)
 
     repo = Rugged::Repository.init_at "./posts/#{self.id}", true
     index = Rugged::Index.new
@@ -75,8 +74,8 @@ class Post < ActiveRecord::Base
     options = {}
     options[:tree] = index.write_tree(repo)
 
-    options[:author] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
-    options[:committer] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
+    options[:author] = { :email => user.email, :name => user.name, :time => Time.now }
+    options[:committer] = { :email => user.email, :name => user.name, :time => Time.now }
     options[:message] ||= "Initial commit"
     options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
     options[:update_ref] = 'HEAD'
@@ -85,7 +84,11 @@ class Post < ActiveRecord::Base
   end
 
   def submit_pull_request(user, params)
-    require 'rugged'
+
+    # make sure tags are in format: [tag1, tag2, another tag, tag3]
+    # and not [tag1,tag2,another tag,tag3]
+    tag_list_string = params[:tag_list].gsub(/,([^\s])/, ', \1')
+    origin_list_string = params[:origin_list].gsub(/,([^\s])/, ', \1')
 
     repo = Rugged::Repository.new "./posts/#{self.id}"
     master = Rugged::Branch.lookup(repo, "master")
@@ -95,28 +98,28 @@ class Post < ActiveRecord::Base
     body_oid = repo.write(params[:body], :blob)
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
 
-    meta_oid = repo.write("tags: [#{params[:tag_list]}]\norigins: [#{params[:origin_list]}]", :blob)
+    meta_oid = repo.write("tags: [#{tag_list_string}]\norigins: [#{origin_list_string}]", :blob)
     builder << { :type => :blob, :name => "META.yml", :oid => meta_oid, :filemode => 0100644 }
 
     options = {}
     options[:tree] = builder.write(repo)
 
-    options[:author] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
-    options[:committer] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
-    options[:message] ||= "Changing commit from user ##{user.id}"
+    options[:author] = { :email => user.email, :name => user.name, :time => Time.now }
+    options[:committer] = { :email => user.email, :name => user.name, :time => Time.now }
+    options[:message] ||= "Propose EDIT by user ##{user.id}"
     options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
 
     commit = Rugged::Commit.create(repo, options)
-    branch = repo.create_branch("#{user.id}-#{rand(36*3).to_s(36)}", commit)
+
+    repo.create_branch("#{user.id}-#{rand(36*3).to_s(36)}", commit)
   end
 
-  def commit_changes(params)
-    require 'rugged'
+  def commit_changes
 
     repo = Rugged::Repository.new "./posts/#{self.id}"
-    master = repo.lookup Rugged::Branch.lookup(repo, "master").target
+    master = Rugged::Branch.lookup(repo, "master")
 
-    builder = Rugged::Tree::Builder.new(master.tree)
+    builder = Rugged::Tree::Builder.new(master.tip.tree)
 
     body_oid = repo.write(self.body, :blob)
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
@@ -127,9 +130,9 @@ class Post < ActiveRecord::Base
     options = {}
     options[:tree] = builder.write(repo)
 
-    options[:author] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
-    options[:committer] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
-    options[:message] ||= "Changing commit"
+    options[:author] = { :email => self.user.email, :name => self.user.name, :time => Time.now }
+    options[:committer] = { :email => self.user.email, :name => self.user.name, :time => Time.now }
+    options[:message] ||= "Author's EDIT"
     options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
     options[:update_ref] = 'HEAD'
 
