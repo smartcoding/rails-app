@@ -39,6 +39,7 @@ GEM
     acts-as-taggable-on (2.3.3)
       rails (~> 3.0)
     arel (3.0.2)
+    awesome_print (1.1.0)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
     certified (0.1.1)
@@ -161,6 +162,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on (~> 2.3.1)
+  awesome_print
   bcrypt-ruby
   certified
   coffee-rails (~> 3.2.1)
