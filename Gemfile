@@ -7,6 +7,7 @@ gem 'impressionist', '1.2.0'
 gem 'devise'
 gem 'omniauth-github'
 gem 'certified'
+gem 'haml', '~> 4.0.2'
 
 gem 'simple_enum', '~> 1.6.4'
 gem 'acts-as-taggable-on', '~> 2.3.1'
