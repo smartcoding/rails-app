@@ -8,3 +8,316 @@
   .m { font-size: 1.2em; }
   .l { font-size: 1.8em; }
 }
+
+
+.file {
+border:1px solid #ccc;
+margin-bottom:1em;
+}
+
+.file .header {
+color:#555;
+border-bottom:1px solid #ccc;
+background:#eee;
+background-image:0;
+padding:5px 5px 5px 10px;
+}
+
+.file .header>span {
+font-family:Menlo,"Liberation Mono",Consolas,"Courier New","andale mono","lucida console",monospace;
+font-size:14px;
+line-height:30px;
+}
+
+.file .header .commit-short-id {
+font-family:Menlo,"Liberation Mono",Consolas,"Courier New","andale mono","lucida console",monospace;
+font-size:smaller;
+}
+
+.file .content {
+overflow:auto;
+overflow-y:hidden;
+background:#FFF;
+color:#333;
+font-size:12px;
+}
+
+.file .content .old span.idiff {
+background-color:#FAA;
+}
+
+.file .content .new span.idiff {
+background-color:#AFA;
+}
+
+.file .content table {
+font-family:Menlo,"Liberation Mono",Consolas,"Courier New","andale mono","lucida console",monospace;
+border:none;
+margin:0;
+padding:0;
+}
+
+.file .content table td {
+line-height:18px;
+font-size:12px;
+}
+
+.file .content .old_line,.file .content .new_line {
+border:none;
+background:#EEE;
+color:#666;
+border-right:1px solid #ccc;
+text-align:right;
+min-width:35px;
+max-width:35px;
+width:35px;
+-webkit-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+-o-user-select:none;
+user-select:none;
+margin:0;
+padding:0 5px;
+}
+
+.file .content .old_line a,.file .content .new_line a {
+float:left;
+width:35px;
+font-weight:400;
+color:#666;
+}
+
+.file .content .line_content {
+display:block;
+white-space:pre;
+height:18px;
+border:none;
+margin:0;
+padding:0;
+}
+
+.file .content .line_content.new {
+background:#CFD;
+}
+
+.file .content .line_content.old {
+background:#FDD;
+}
+
+.file .content .line_content.matched {
+color:#ccc;
+background:#fafafa;
+}
+
+.file .image {
+background:#ddd;
+text-align:center;
+padding:30px;
+}
+
+.file .image .frame {
+display:inline-block;
+background-color:#fff;
+line-height:0;
+}
+
+.file .image .frame img {
+border:1px solid #fff;
+background:url(trans_bg.gif);
+}
+
+.file .image .frame.deleted {
+border:1px solid #f77;
+}
+
+.file .image .frame.added {
+border:1px solid #63c363;
+}
+
+.file .image .image-info {
+font-size:12px;
+color:grey;
+margin:5px 0 0;
+}
+
+.file .image .view.swipe .swipe-wrap {
+overflow:hidden;
+border-left:1px solid #999;
+position:absolute;
+display:block;
+top:13px;
+right:7px;
+}
+
+.file .image .view.swipe .frame {
+top:0;
+right:0;
+position:absolute;
+}
+
+.file .image .view.swipe .frame.deleted {
+display:block;
+top:13px;
+right:7px;
+margin:0;
+}
+
+.file .image .view.swipe .swipe-bar {
+display:block;
+height:100%;
+width:15px;
+z-index:100;
+position:absolute;
+cursor:pointer;
+}
+
+.file .image .view.swipe .swipe-bar:hover .top-handle {
+background-position:-15px 3px;
+}
+
+.file .image .view.swipe .swipe-bar:hover .bottom-handle {
+background-position:-15px -11px;
+}
+
+.file .image .view.swipe .swipe-bar .top-handle {
+display:block;
+height:14px;
+width:15px;
+position:absolute;
+top:0;
+background:url(swipemode_sprites.gif) 0 3px no-repeat;
+}
+
+.file .image .view.swipe .swipe-bar .bottom-handle {
+display:block;
+height:14px;
+width:15px;
+position:absolute;
+bottom:0;
+background:url(swipemode_sprites.gif) 0 -11px no-repeat;
+}
+
+.file .image .view.onion-skin .frame.added,.file .image .view.onion-skin .frame.deleted {
+position:absolute;
+display:block;
+top:0;
+left:0;
+}
+
+.file .image .view.onion-skin .controls,.file .image .view.onion-skin form .input,form .file .image .view.onion-skin .input {
+display:block;
+height:14px;
+width:300px;
+z-index:100;
+position:absolute;
+bottom:0;
+left:50%;
+margin-left:-150px;
+}
+
+.file .image .view.onion-skin .controls .drag-track,.file .image .view.onion-skin form .input .drag-track,form .file .image .view.onion-skin .input .drag-track {
+display:block;
+position:absolute;
+left:12px;
+height:10px;
+width:276px;
+background:url(onion_skin_sprites.gif) -4px -20px repeat-x;
+}
+
+.file .image .view.onion-skin .controls .dragger,.file .image .view.onion-skin form .input .dragger,form .file .image .view.onion-skin .input .dragger {
+display:block;
+position:absolute;
+left:0;
+top:0;
+height:14px;
+width:14px;
+background:url(onion_skin_sprites.gif) 0 -34px repeat-x;
+cursor:pointer;
+}
+
+.file .image .view.onion-skin .controls .transparent,.file .image .view.onion-skin form .input .transparent,form .file .image .view.onion-skin .input .transparent {
+display:block;
+position:absolute;
+top:2px;
+right:0;
+height:10px;
+width:10px;
+background:url(onion_skin_sprites.gif) -2px 0 no-repeat;
+}
+
+.file .image .view.onion-skin .controls .opaque,.file .image .view.onion-skin form .input .opaque,form .file .image .view.onion-skin .input .opaque {
+display:block;
+position:absolute;
+top:2px;
+left:0;
+height:10px;
+width:10px;
+background:url(onion_skin_sprites.gif) -2px -10px no-repeat;
+}
+
+.file .view-modes {
+text-align:center;
+background-image:0;
+padding:10px;
+}
+
+.file .view-modes ul,.file .view-modes li {
+list-style:none;
+display:inline-block;
+margin:0;
+padding:0;
+}
+
+.file .view-modes li {
+color:grey;
+border-left:1px solid #c1c1c1;
+cursor:pointer;
+padding:0 12px 0 16px;
+}
+
+.file .view-modes li.active {
+cursor:default;
+color:#333;
+}
+
+.commit-title {
+display:block;
+margin-bottom:10px;
+}
+
+.commit .notes_count {
+float:right;
+margin:-6px 8px 6px;
+}
+
+.commit code {
+background:#FCEEC1;
+color:#474d57;
+}
+
+.commit .commit_short_id {
+float:left;
+min-width:65px;
+font-family:Menlo,"Liberation Mono",Consolas,"Courier New","andale mono","lucida console",monospace;
+}
+
+.file-stats .new-file i {
+color:#1BCF00;
+}
+
+.file-stats .renamed-file i {
+color:#FE9300;
+}
+
+.file-stats .deleted-file i {
+color:red;
+}
+
+.file tr.line_holder .add-diff-note:hover,.file tr.line_holder:hover>td .add-diff-note,.file .content tr.line_holder:hover>td .line_note_link {
+opacity:1.0;
+filter:alpha(opacity=100);
+}
+
+.file tr.line_holder:hover>td,.file .content tr.line_holder:hover>td {
+background:#d9edf7!important;
+}

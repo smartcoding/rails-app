@@ -13,3 +13,183 @@
  *= require formtastic
  *= require_tree .
  */
+table {
+max-width:100%;
+background-color:transparent;
+border-collapse:collapse;
+border-spacing:0;
+-webkit-box-shadow:0 0 0 3px #f1f1f1;
+-moz-box-shadow:0 0 0 3px #f1f1f1;
+-ms-box-shadow:0 0 0 3px #f1f1f1;
+-o-box-shadow:0 0 0 3px #f1f1f1;
+box-shadow:0 0 0 3px #f1f1f1;
+border:1px solid #bbb;
+width:100%;
+}
+
+.table,table {
+width:100%;
+margin-bottom:18px;
+}
+
+.table th,table th,.table td,table td {
+line-height:18px;
+text-align:left;
+vertical-align:top;
+border-top:1px solid #ddd;
+padding:8px;
+}
+
+.table thead th,table thead th {
+vertical-align:bottom;
+}
+
+.table tbody+tbody,table tbody+tbody {
+border-top:2px solid #ddd;
+}
+
+.table-condensed th,.table-condensed td {
+padding:4px 5px;
+}
+
+.table-bordered,table.bordered {
+border:1px solid #ddd;
+border-collapse:collapse;
+border-left:0;
+-webkit-border-radius:4px;
+-moz-border-radius:4px;
+border-radius:4px;
+}
+
+.table-bordered th,table.bordered th,.table-bordered td,table.bordered td {
+border-left:1px solid #ddd;
+}
+
+.table-bordered thead:last-child tr:last-child th:first-child,table.bordered thead:last-child tr:last-child th:first-child,.table-bordered tbody:last-child tr:last-child td:first-child,table.bordered tbody:last-child tr:last-child td:first-child,.table-bordered tfoot:last-child tr:last-child td:first-child,table.bordered tfoot:last-child tr:last-child td:first-child {
+-webkit-border-radius:0 0 0 4px;
+-moz-border-radius:0 0 0 4px;
+border-radius:0 0 0 4px;
+-webkit-border-bottom-left-radius:4px;
+border-bottom-left-radius:4px;
+-moz-border-radius-bottomleft:4px;
+}
+
+.table-bordered thead:last-child tr:last-child th:last-child,table.bordered thead:last-child tr:last-child th:last-child,.table-bordered tbody:last-child tr:last-child td:last-child,table.bordered tbody:last-child tr:last-child td:last-child,.table-bordered tfoot:last-child tr:last-child td:last-child,table.bordered tfoot:last-child tr:last-child td:last-child {
+-webkit-border-bottom-right-radius:4px;
+border-bottom-right-radius:4px;
+-moz-border-radius-bottomright:4px;
+}
+
+.table-striped tbody tr:nth-child(odd) td,table tbody tr:nth-child(odd) td,.table-striped tbody tr:nth-child(odd) th,table tbody tr:nth-child(odd) th {
+background-color:#f9f9f9;
+}
+
+table td[class*="span"],table th[class*="span"],.row-fluid table td[class*="span"],.row-fluid table th[class*="span"] {
+display:table-cell;
+float:none;
+margin-left:0;
+}
+
+.table td.span1,table td.span1,.table th.span1,table th.span1 {
+float:none;
+width:44px;
+margin-left:0;
+}
+
+.table td.span2,table td.span2,.table .dashboard-search-filter td.search-text-input,.dashboard-search-filter .table td.search-text-input,table .dashboard-search-filter td.search-text-input,.dashboard-search-filter table td.search-text-input,.table header .search td.search-input,header .search .table td.search-input,table header .search td.search-input,header .search table td.search-input,.table th.span2,table th.span2,.table .dashboard-search-filter th.search-text-input,.dashboard-search-filter .table th.search-text-input,table .dashboard-search-filter th.search-text-input,.dashboard-search-filter table th.search-text-input,.table header .search th.search-input,header .search .table th.search-input,table header .search th.search-input,header .search table th.search-input {
+float:none;
+width:124px;
+margin-left:0;
+}
+
+.table td.span3,table td.span3,.table header .search td.search-input:focus,header .search .table td.search-input:focus,table header .search td.search-input:focus,header .search table td.search-input:focus,.table th.span3,table th.span3,.table header .search th.search-input:focus,header .search .table th.search-input:focus,table header .search th.search-input:focus,header .search table th.search-input:focus {
+float:none;
+width:204px;
+margin-left:0;
+}
+
+.table td.span4,table td.span4,.table td.note-image-attach,table td.note-image-attach,.table th.span4,table th.span4,.table th.note-image-attach,table th.note-image-attach {
+float:none;
+width:284px;
+margin-left:0;
+}
+
+.table td.span5,table td.span5,.table th.span5,table th.span5 {
+float:none;
+width:364px;
+margin-left:0;
+}
+
+.table td.span6,table td.span6,.table td.git_error_tips,table td.git_error_tips,.table th.span6,table th.span6,.table th.git_error_tips,table th.git_error_tips {
+float:none;
+width:444px;
+margin-left:0;
+}
+
+.table td.span7,table td.span7,.table th.span7,table th.span7 {
+float:none;
+width:524px;
+margin-left:0;
+}
+
+.table td.span8,table td.span8,.table th.span8,table th.span8 {
+float:none;
+width:604px;
+margin-left:0;
+}
+
+.table td.span9,table td.span9,.table th.span9,table th.span9 {
+float:none;
+width:684px;
+margin-left:0;
+}
+
+.table td.span10,table td.span10,.table th.span10,table th.span10 {
+float:none;
+width:764px;
+margin-left:0;
+}
+
+.table td.span11,table td.span11,.table th.span11,table th.span11 {
+float:none;
+width:844px;
+margin-left:0;
+}
+
+.table td.span12,table td.span12,.table .wall-page td.wall-note-form,.wall-page .table td.wall-note-form,table .wall-page td.wall-note-form,.wall-page table td.wall-note-form,.table th.span12,table th.span12,.table .wall-page th.wall-note-form,.wall-page .table th.wall-note-form,table .wall-page th.wall-note-form,.wall-page table th.wall-note-form {
+float:none;
+width:924px;
+margin-left:0;
+}
+
+.table tbody tr.success td,table tbody tr.success td,.table tbody tr.btn.btn-create td,table tbody tr.btn.btn-create td,.table tbody tr.btn.comment-btn td,table tbody tr.btn.comment-btn td {
+background-color:#dff0d8;
+}
+
+.table tbody tr.error td,table tbody tr.error td {
+background-color:#f2dede;
+}
+
+.table tbody tr.warning td,table tbody tr.warning td {
+background-color:#fcf8e3;
+}
+
+.table tbody tr.info td,table tbody tr.info td {
+background-color:#d9edf7;
+}
+
+.table-hover tbody tr.success:hover td,.table-hover tbody tr.btn.btn-create:hover td,.table-hover tbody tr.btn.comment-btn:hover td {
+background-color:#d0e9c6;
+}
+
+.table-hover tbody tr.error:hover td {
+background-color:#ebcccc;
+}
+
+.table-hover tbody tr.warning:hover td {
+background-color:#faf2cc;
+}
+
+.table-hover tbody tr.info:hover td {
+background-color:#c4e3f3;
+}

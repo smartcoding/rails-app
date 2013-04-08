@@ -89,10 +89,11 @@ class PostsController < ApplicationController
     @posts = Post.search(params)
   end
 
+  # /posts/:id/pull/:pull_id
   def pull
     g = Git.bare "./posts/#{params[:id]}"
-    diff = g.diff('master', params[:pull_id])
-    render :text => diff.patch
+    @diff = g.diff('master', params[:pull_id])
+    render :pull
   end
 
   def pull_merge
