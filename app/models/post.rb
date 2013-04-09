@@ -68,7 +68,13 @@ class Post < ActiveRecord::Base
     oid = repo.write('README file contents here', :blob)
     index.add(:path => "README.md", :oid => oid, :mode => 0100644)
 
-    oid = repo.write("tags: [#{self.tag_list.to_s}]\norigins: [#{self.origin_list.to_s}]", :blob)
+      # Concatenate META attributes into one string in YAML format
+      meta = "tags:"
+      self.tag_list.each { |t| meta << "\n  - #{t}" }
+      meta << "\norigins:"
+      self.origin_list.each { |t| meta << "\n  - #{t}" }
+
+    oid = repo.write(meta, :blob)
     index.add(:path => "META.yml", :oid => oid, :mode => 0100644)
 
     options = {}
@@ -87,8 +93,8 @@ class Post < ActiveRecord::Base
 
     # make sure tags are in format: [tag1, tag2, another tag, tag3]
     # and not [tag1,tag2,another tag,tag3]
-    tag_list_string = params[:tag_list].gsub(/,([^\s])/, ', \1')
-    origin_list_string = params[:origin_list].gsub(/,([^\s])/, ', \1')
+    tag_list = params[:tag_list].gsub(/,([^\s])/, ', \1').split(', ')
+    origin_list = params[:origin_list].gsub(/,([^\s])/, ', \1').split(', ')
 
     repo = Rugged::Repository.new "./posts/#{self.id}"
     master = Rugged::Branch.lookup(repo, "master")
@@ -98,7 +104,13 @@ class Post < ActiveRecord::Base
     body_oid = repo.write(params[:body], :blob)
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
 
-    meta_oid = repo.write("tags: [#{tag_list_string}]\norigins: [#{origin_list_string}]", :blob)
+      # Concatenate META attributes into one string in YAML format
+      meta = "tags:"
+      tag_list.each { |t| meta << "\n  - #{t}" }
+      meta << "\norigins:"
+      origin_list.each { |t| meta << "\n  - #{t}" }
+
+    meta_oid = repo.write(meta, :blob)
     builder << { :type => :blob, :name => "META.yml", :oid => meta_oid, :filemode => 0100644 }
 
     options = {}
