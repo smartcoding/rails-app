@@ -18,7 +18,9 @@ gem 'select2-rails'
 gem "rugged", :git => "git://github.com/sergeylukin/rugged.git",
               :branch => "gnu-make-bsd", :submodules => true
 # fallback solution for diffing and merging
-gem "git", "~> 1.2.5"
+# gem "git", "~> 1.2.5"
+gem "git", :git => "git://github.com/sergeylukin/ruby-git.git",
+           :branch => "patches"
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
