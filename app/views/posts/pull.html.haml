@@ -1,3 +1,8 @@
+- if @mergeable
+  This pull can be merged automatically
+- else
+  This pull cannot be merged automatically
+
 .files
   - @diff.each_with_index do |diff, i|
     .file{id: "diff-#{i}"}

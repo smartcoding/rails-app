@@ -92,19 +92,38 @@ class PostsController < ApplicationController
   # /posts/:id/pull/:pull_id
   def pull
     g = Git.bare "./posts/#{params[:id]}"
-    @diff = g.diff('master', params[:pull_id])
-    render :pull
+    @diff = g.diff("#{params[:pull_id]}~", params[:pull_id])
+
+    # check patch status
+    g.with_temp_working do
+      g.reset_hard 'master'
+      begin
+        g.check_patch 'master', params[:pull_id]
+        @mergeable = true
+      rescue => e
+        @mergeable = false
+      end
+      render :pull and return
+    end
   end
 
   def pull_merge
     g = Git.bare "./posts/#{params[:id]}"
     g.with_temp_working do
-      g.config('user.name', 'Robot')
-      g.config('user.email', 'email@email.com')
+      # g.config('user.name', 'Robot')
+      # g.config('user.email', 'email@email.com')
+      # g.merge(params[:pull_id], "Merge pull request ##{params[:pull_id]}")
       g.reset_hard 'master'
-      g.merge(params[:pull_id], "Merge pull request ##{params[:pull_id]}")
+      begin
+        g.check_patch 'master', params[:pull_id]
+        g.apply_patch 'master', params[:pull_id]
+        g.branch(params[:pull_id]).delete
+        flash[:notice] = "Merged!"
+      rescue => e
+        flash[:warning] = "This patch cannot be merged automatically"
+      end
+      redirect_to "/posts/#{params[:id]}/pull/#{params[:pull_id]}" and return
     end
-    render :text => 'Merged!' and return
   end
 
   private 
