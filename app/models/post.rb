@@ -53,26 +53,26 @@ class Post < ActiveRecord::Base
     repo = Rugged::Repository.init_at "./posts/#{self.id}", true
     index = Rugged::Index.new
 
-    oid = repo.write(self.body, :blob)
+    oid = repo.write("#{self.body.gsub(/\r\n?/, "\n")}\n", :blob)
     index.add(:path => "#{self.category.to_s}.md", :oid => oid, :mode => 0100644)
 
     if self.category.to_s === 'problem'
-      oid = repo.write(self.additional_body, :blob)
+      oid = repo.write(self.additional_body.gsub(/\r\n?/, "\n"), :blob)
       index.add(:path => "solution.md", :oid => oid, :mode => 0100644)
     end
     if self.category.to_s === 'question'
-      oid = repo.write(self.additional_body, :blob)
+      oid = repo.write(self.additional_body.gsub(/\r\n?/, "\n"), :blob)
       index.add(:path => "answer.md", :oid => oid, :mode => 0100644)
     end
 
-    oid = repo.write('README file contents here', :blob)
+    oid = repo.write("README file contents here\n", :blob)
     index.add(:path => "README.md", :oid => oid, :mode => 0100644)
 
       # Concatenate META attributes into one string in YAML format
-      meta = "tags:"
-      self.tag_list.each { |t| meta << "\n  - #{t}" }
-      meta << "\norigins:"
-      self.origin_list.each { |t| meta << "\n  - #{t}" }
+      meta = "tags:\n"
+      self.tag_list.each { |t| meta << "  - #{t}\n" }
+      meta << "origins:\n"
+      self.origin_list.each { |t| meta << "  - #{t}\n" }
 
     oid = repo.write(meta, :blob)
     index.add(:path => "META.yml", :oid => oid, :mode => 0100644)
@@ -101,14 +101,14 @@ class Post < ActiveRecord::Base
 
     builder = Rugged::Tree::Builder.new(master.tip.tree)
 
-    body_oid = repo.write(params[:body], :blob)
+    body_oid = repo.write(params[:body].gsub(/\r\n?/, "\n"), :blob)
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
 
       # Concatenate META attributes into one string in YAML format
-      meta = "tags:"
-      tag_list.each { |t| meta << "\n  - #{t}" }
-      meta << "\norigins:"
-      origin_list.each { |t| meta << "\n  - #{t}" }
+      meta = "tags:\n"
+      tag_list.each { |t| meta << "  - #{t}\n" }
+      meta << "origins:\n"
+      origin_list.each { |t| meta << "  - #{t}\n" }
 
     meta_oid = repo.write(meta, :blob)
     builder << { :type => :blob, :name => "META.yml", :oid => meta_oid, :filemode => 0100644 }
@@ -133,10 +133,16 @@ class Post < ActiveRecord::Base
 
     builder = Rugged::Tree::Builder.new(master.tip.tree)
 
-    body_oid = repo.write(self.body, :blob)
+    body_oid = repo.write(self.body.gsub(/\r\n?/, "\n"), :blob)
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
 
-    meta_oid = repo.write("tags: [#{self.tag_list.to_s}]\norigins: [#{self.origin_list.to_s}]", :blob)
+      # Concatenate META attributes into one string in YAML format
+      meta = "tags:\n"
+      self.tag_list.each { |t| meta << "  - #{t}\n" }
+      meta << "origins:\n"
+      self.origin_list.each { |t| meta << "  - #{t}\n" }
+
+    meta_oid = repo.write(meta, :blob)
     builder << { :type => :blob, :name => "META.yml", :oid => meta_oid, :filemode => 0100644 }
 
     options = {}
