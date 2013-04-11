@@ -15,8 +15,8 @@ gem 'formtastic'
 gem 'select2-rails'
 
 # solid solution for reading and wrigin to repos
-gem "rugged", :git => "git://github.com/sergeylukin/rugged.git",
-              :branch => "gnu-make-bsd", :submodules => true
+gem "rugged", :git => "git://github.com/libgit2/rugged.git",
+              :branch => "development", :submodules => true
 # fallback solution for diffing and merging
 # gem "git", "~> 1.2.5"
 gem "git", :git => "git://github.com/sergeylukin/ruby-git.git",
