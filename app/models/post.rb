@@ -69,6 +69,7 @@ class Post < ActiveRecord::Base
     index.add(:path => "README.md", :oid => oid, :mode => 0100644)
 
       # Concatenate META attributes into one string in YAML format
+      meta = "category: #{self.category.to_s}\n"
       meta = "tags:\n"
       self.tag_list.each { |t| meta << "  - #{t}\n" }
       meta << "origins:\n"
@@ -105,6 +106,7 @@ class Post < ActiveRecord::Base
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
 
       # Concatenate META attributes into one string in YAML format
+      meta = "category: #{self.category.to_s}\n"
       meta = "tags:\n"
       tag_list.each { |t| meta << "  - #{t}\n" }
       meta << "origins:\n"
@@ -137,6 +139,7 @@ class Post < ActiveRecord::Base
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
 
       # Concatenate META attributes into one string in YAML format
+      meta = "category: #{self.category.to_s}\n"
       meta = "tags:\n"
       self.tag_list.each { |t| meta << "  - #{t}\n" }
       meta << "origins:\n"
