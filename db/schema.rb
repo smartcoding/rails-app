@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130405122047) do
+ActiveRecord::Schema.define(:version => 20130413223505) do
 
   create_table "comments", :force => true do |t|
     t.integer  "user_id"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20130405122047) do
     t.integer  "comments_count",  :default => 0
     t.text     "additional_body"
     t.integer  "category_cd"
+    t.text     "description"
   end
 
   add_index "posts", ["user_id"], :name => "index_posts_on_user_id"
