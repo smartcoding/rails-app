@@ -19,7 +19,9 @@ class Post < ActiveRecord::Base
 
   is_impressionable :counter_cache => { :column_name => :views_count }
 
-  attr_accessible :body, :additional_body, :user_id, :category, :tag_list, :origin_list
+  attr_accessible :body, :additional_body, :user_id,
+                  :category, :tag_list, :origin_list,
+                  :description
 
   validates :body, presence: true, length: { minimum: 10 }
 
@@ -56,21 +58,23 @@ class Post < ActiveRecord::Base
     oid = repo.write("#{self.body.gsub(/\r\n?/, "\n")}\n", :blob)
     index.add(:path => "#{self.category.to_s}.md", :oid => oid, :mode => 0100644)
 
-    if self.category.to_s === 'problem'
+    if self.category.to_s === 'problem' and !self.additional_body.blank?
       oid = repo.write(self.additional_body.gsub(/\r\n?/, "\n"), :blob)
       index.add(:path => "solution.md", :oid => oid, :mode => 0100644)
     end
-    if self.category.to_s === 'question'
+    if self.category.to_s === 'question' and !self.additional_body.blank?
       oid = repo.write(self.additional_body.gsub(/\r\n?/, "\n"), :blob)
       index.add(:path => "answer.md", :oid => oid, :mode => 0100644)
     end
 
-    oid = repo.write("README file contents here\n", :blob)
-    index.add(:path => "README.md", :oid => oid, :mode => 0100644)
+    unless self.description.blank?
+      oid = repo.write(self.description, :blob)
+      index.add(:path => "README.md", :oid => oid, :mode => 0100644)
+    end
 
       # Concatenate META attributes into one string in YAML format
       meta = "category: #{self.category.to_s}\n"
-      meta = "tags:\n"
+      meta << "tags:\n"
       self.tag_list.each { |t| meta << "  - #{t}\n" }
       meta << "origins:\n"
       self.origin_list.each { |t| meta << "  - #{t}\n" }
@@ -107,7 +111,7 @@ class Post < ActiveRecord::Base
 
       # Concatenate META attributes into one string in YAML format
       meta = "category: #{self.category.to_s}\n"
-      meta = "tags:\n"
+      meta << "tags:\n"
       tag_list.each { |t| meta << "  - #{t}\n" }
       meta << "origins:\n"
       origin_list.each { |t| meta << "  - #{t}\n" }
@@ -140,7 +144,7 @@ class Post < ActiveRecord::Base
 
       # Concatenate META attributes into one string in YAML format
       meta = "category: #{self.category.to_s}\n"
-      meta = "tags:\n"
+      meta << "tags:\n"
       self.tag_list.each { |t| meta << "  - #{t}\n" }
       meta << "origins:\n"
       self.origin_list.each { |t| meta << "  - #{t}\n" }
