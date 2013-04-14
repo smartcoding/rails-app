@@ -147,8 +147,8 @@ class PostsController < ApplicationController
 
           # Update the Model
           @post.body = @body
-          @post.additional_body = @answer if @answer
-          @post.additional_body = @solution if @solution
+          @post.answer = @answer if @answer
+          @post.solution = @solution if @solution
           @post.tag_list = @tags
           @post.origin_list = @origins
           @post.save

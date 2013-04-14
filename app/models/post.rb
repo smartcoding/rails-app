@@ -4,6 +4,8 @@ class Post < ActiveRecord::Base
   has_many :likes, dependent: :destroy
   has_many :timelines, :as => :timelineable, dependent: :destroy
 
+  serialize :properties, ActiveRecord::Coders::Hstore
+
   acts_as_ordered_taggable_on :tags, :origins
 
   # gaining with simple_enum Gem here..
@@ -19,7 +21,7 @@ class Post < ActiveRecord::Base
 
   is_impressionable :counter_cache => { :column_name => :views_count }
 
-  attr_accessible :body, :additional_body, :user_id,
+  attr_accessible :body, :user_id,
                   :category, :tag_list, :origin_list,
                   :description
 
@@ -58,12 +60,12 @@ class Post < ActiveRecord::Base
     oid = repo.write("#{self.body.gsub(/\r\n?/, "\n")}\n", :blob)
     index.add(:path => "#{self.category.to_s}.md", :oid => oid, :mode => 0100644)
 
-    if self.category.to_s === 'problem' and !self.additional_body.blank?
-      oid = repo.write(self.additional_body.gsub(/\r\n?/, "\n"), :blob)
+    if self.category.to_s === 'problem' and !self.solution.blank?
+      oid = repo.write(self.solution.gsub(/\r\n?/, "\n"), :blob)
       index.add(:path => "solution.md", :oid => oid, :mode => 0100644)
     end
-    if self.category.to_s === 'question' and !self.additional_body.blank?
-      oid = repo.write(self.additional_body.gsub(/\r\n?/, "\n"), :blob)
+    if self.category.to_s === 'question' and !self.answer.blank?
+      oid = repo.write(self.answer.gsub(/\r\n?/, "\n"), :blob)
       index.add(:path => "answer.md", :oid => oid, :mode => 0100644)
     end
 
@@ -162,6 +164,29 @@ class Post < ActiveRecord::Base
     options[:update_ref] = 'HEAD'
 
     Rugged::Commit.create(repo, options)
+  end
+
+  # Extend HStore API
+  # Allow fetching HStore keys
+  # as if they were regular columns
+  #
+  # Examples:
+  #
+  # Post.last.solution
+  # Post.last.answer = 2
+  # Post.last.has_answer(1)
+  #
+  %w[solution answer].each do |key|
+    attr_accessible key
+    scope "has_#{key}", lambda { |value| where("properties -> ? LIKE ?", key, value) }
+
+    define_method(key) do
+      properties && properties[key]
+    end
+
+    define_method("#{key}=") do |value|
+      properties[key] = value
+    end
   end
 
   private
