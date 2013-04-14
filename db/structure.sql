@@ -163,7 +163,8 @@ CREATE TABLE posts (
     comments_count integer DEFAULT 0,
     additional_body text,
     category_cd integer,
-    description text
+    description text,
+    properties hstore
 );
 
 
@@ -674,6 +675,13 @@ CREATE INDEX poly_session_index ON impressions USING btree (impressionable_type,
 
 
 --
+-- Name: posts_properties; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX posts_properties ON posts USING gin (properties);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -737,3 +745,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130405122047');
 INSERT INTO schema_migrations (version) VALUES ('20130413223505');
 
 INSERT INTO schema_migrations (version) VALUES ('20130414210303');
+
+INSERT INTO schema_migrations (version) VALUES ('20130414213211');
+
+INSERT INTO schema_migrations (version) VALUES ('20130414213310');
