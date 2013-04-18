@@ -38,6 +38,7 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
+    @pending_patches = @post.patches.where(:status_cd => Patch.is_pending)
 
     repo = Rugged::Repository.new "./posts/#{params[:id]}"
     master = Rugged::Branch.lookup(repo, "master")

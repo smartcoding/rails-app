@@ -1,5 +1,12 @@
 <% provide(:title, 'View post') %>
 
+<% if @pending_patches.empty? %>
+  <p>There are no pending patches</p>
+<% end %>
+<% @pending_patches.each do |p| %>
+  <p>Here is pending patch <%= link_to p.id, post_patch_path(@post, p) %></p>
+<% end %>
+
 <%= simple_format @description %>
 <%= simple_format @body %>
 <%= simple_format @answer %>
