@@ -6,10 +6,17 @@ class Patch < ActiveRecord::Base
 
   # gaining with simple_enum Gem here..
   as_enum :status, { :pending       => 1,
-                     :approved      => 2,
+                     :merged        => 2,
                      :declined      => 3 },
-          # Use "is_" prefix so that category could be
-          # accessed via post.is_tip? or post.is_quote!
+          # Use "is_" prefix so that status could be
+          # accessed via patch.is_approved? or post.is_declined!
           :prefix => 'is'
-  validates_as_enum :status
+
+  before_save :set_defaults
+
+  private
+
+  def set_defaults
+    self.status = :pending if self.status.nil?
+  end
 end

@@ -75,7 +75,7 @@ class PostsController < ApplicationController
         render :edit
       end
     else
-      if @post.submit_pull_request(current_or_guest_user, params[:post])
+      if @post.submit_patch(current_or_guest_user, params[:post])
         flash[:success] = "Your changes were submitted for moderation"
         flash.keep
         redirect_to edit_post_path @post
@@ -115,6 +115,7 @@ class PostsController < ApplicationController
 
   def pull_merge
     @post = Post.find(params[:id])
+    @patch = Patch.find(params[:pull_id])
     repo = Rugged::Repository.new "./posts/#{params[:id]}"
 
     if @post.user === current_or_guest_user
@@ -126,13 +127,14 @@ class PostsController < ApplicationController
         g.reset_hard 'master'
         begin
           raise unless g.patch_mergeable? 'master', params[:pull_id]
-          g.apply_patch 'master', params[:pull_id]
+          g.apply_patch 'master', @patch.id
           # g.branch(params[:pull_id]).delete
 
           # Retrieve the latest Repo status
           master = Rugged::Branch.lookup(repo, "master")
           master.tip.tree.each_blob do |b|
             @body = repo.lookup(b[:oid]).content if b[:name] === "#{@post.category.to_s}.md"
+            @description = repo.lookup(b[:oid]).content if b[:name] === "README.md"
             @answer = repo.lookup(b[:oid]).content if b[:name] === "answer.md"
             @solution = repo.lookup(b[:oid]).content if b[:name] === "solution.md"
             if b[:name] === "META.yml"
@@ -147,11 +149,15 @@ class PostsController < ApplicationController
 
           # Update the Model
           @post.body = @body
+          @post.description = @description
           @post.answer = @answer if @answer
           @post.solution = @solution if @solution
           @post.tag_list = @tags
           @post.origin_list = @origins
           @post.save
+
+          @patch.is_merged!
+          @patch.save
 
           flash[:notice] = "Merged!"
         rescue => e

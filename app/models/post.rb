@@ -58,20 +58,20 @@ class Post < ActiveRecord::Base
     repo = Rugged::Repository.init_at "./posts/#{self.id}", true
     index = Rugged::Index.new
 
-    oid = repo.write("#{self.body.gsub(/\r\n?/, "\n")}\n", :blob)
+    oid = repo.write(append_whitespace(self.body.gsub(/\r\n?/, "\n")), :blob)
     index.add(:path => "#{self.category.to_s}.md", :oid => oid, :mode => 0100644)
 
     if self.category.to_s === 'problem' and !self.solution.blank?
-      oid = repo.write(self.solution.gsub(/\r\n?/, "\n"), :blob)
+      oid = repo.write(append_whitespace(self.solution.gsub(/\r\n?/, "\n")), :blob)
       index.add(:path => "solution.md", :oid => oid, :mode => 0100644)
     end
     if self.category.to_s === 'question' and !self.answer.blank?
-      oid = repo.write(self.answer.gsub(/\r\n?/, "\n"), :blob)
+      oid = repo.write(append_whitespace(self.answer.gsub(/\r\n?/, "\n")), :blob)
       index.add(:path => "answer.md", :oid => oid, :mode => 0100644)
     end
 
     unless self.description.blank?
-      oid = repo.write(self.description, :blob)
+      oid = repo.write(append_whitespace(self.description.gsub(/\r\n?/, "\n")), :blob)
       index.add(:path => "README.md", :oid => oid, :mode => 0100644)
     end
 
@@ -97,7 +97,9 @@ class Post < ActiveRecord::Base
     Rugged::Commit.create(repo, options)
   end
 
-  def submit_pull_request(user, params)
+  def submit_patch(user, params)
+
+    patch = user.patches.create!
 
     # make sure tags are in format: [tag1, tag2, another tag, tag3]
     # and not [tag1,tag2,another tag,tag3]
@@ -109,8 +111,22 @@ class Post < ActiveRecord::Base
 
     builder = Rugged::Tree::Builder.new(master.tip.tree)
 
-    body_oid = repo.write(params[:body].gsub(/\r\n?/, "\n"), :blob)
+    body_oid = repo.write(append_whitespace(params[:body].gsub(/\r\n?/, "\n")), :blob)
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
+
+    if self.category.to_s === 'problem' and !self.solution.blank?
+      solution_oid = repo.write(append_whitespace(self.solution.gsub(/\r\n?/, "\n")), :blob)
+      builder << { :type => :blob, :name => "solution.md", :oid => solution_oid, :filemode => 0100644 }
+    end
+    if self.category.to_s === 'question' and !self.answer.blank?
+      answer_oid = repo.write(append_whitespace(self.answer.gsub(/\r\n?/, "\n")), :blob)
+      builder << { :type => :blob, :name => "answer.md", :oid => answer_oid, :filemode => 0100644 }
+    end
+
+    unless params[:description].blank?
+      readme_oid = repo.write(append_whitespace(params[:description].gsub(/\r\n?/, "\n")), :blob)
+      builder << { :type => :blob, :name => "README.md", :oid => readme_oid, :filemode => 0100644 }
+    end
 
       # Concatenate META attributes into one string in YAML format
       meta = "category: #{self.category.to_s}\n"
@@ -127,12 +143,20 @@ class Post < ActiveRecord::Base
 
     options[:author] = { :email => user.email, :name => user.name, :time => Time.now }
     options[:committer] = { :email => user.email, :name => user.name, :time => Time.now }
-    options[:message] ||= "Propose EDIT by user ##{user.id}"
+    options[:message] ||= "Patch #{patch.id} by User #{user.id}"
     options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
 
     commit = Rugged::Commit.create(repo, options)
 
-    repo.create_branch("#{user.id}-#{rand(36*3).to_s(36)}", commit)
+    branch_name = patch.id.to_s
+
+    repo.create_branch(branch_name, commit)
+
+    patch.post_id = self.id
+    patch.body = Git.bare("./posts/#{self.id}")
+                .diff("#{branch_name}~", branch_name)
+                .patch
+    patch.save!
   end
 
   def commit_changes
@@ -142,8 +166,22 @@ class Post < ActiveRecord::Base
 
     builder = Rugged::Tree::Builder.new(master.tip.tree)
 
-    body_oid = repo.write(self.body.gsub(/\r\n?/, "\n"), :blob)
+    body_oid = repo.write(append_whitespace(self.body.gsub(/\r\n?/, "\n")), :blob)
     builder << { :type => :blob, :name => "#{self.category.to_s}.md", :oid => body_oid, :filemode => 0100644 }
+
+    if self.category.to_s === 'problem' and !self.solution.blank?
+      solution_oid = repo.write(append_whitespace(self.solution.gsub(/\r\n?/, "\n")), :blob)
+      builder << { :type => :blob, :name => "solution.md", :oid => solution_oid, :filemode => 0100644 }
+    end
+    if self.category.to_s === 'question' and !self.answer.blank?
+      answer_oid = repo.write(append_whitespace(self.answer.gsub(/\r\n?/, "\n")), :blob)
+      builder << { :type => :blob, :name => "answer.md", :oid => answer_oid, :filemode => 0100644 }
+    end
+
+    unless self.description.blank?
+      readme_oid = repo.write(append_whitespace(self.description.gsub(/\r\n?/, "\n")), :blob)
+      builder << { :type => :blob, :name => "README.md", :oid => readme_oid, :filemode => 0100644 }
+    end
 
       # Concatenate META attributes into one string in YAML format
       meta = "category: #{self.category.to_s}\n"
@@ -160,7 +198,7 @@ class Post < ActiveRecord::Base
 
     options[:author] = { :email => self.user.email, :name => self.user.name, :time => Time.now }
     options[:committer] = { :email => self.user.email, :name => self.user.name, :time => Time.now }
-    options[:message] ||= "Author's EDIT"
+    options[:message] ||= "Commit by User #{self.user.id}"
     options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
     options[:update_ref] = 'HEAD'
 
@@ -218,5 +256,10 @@ class Post < ActiveRecord::Base
       errors.add(:origin, "too long (maximum is 20 characters)") if tag.length > 20
       errors.add(:origin, "too short (minumum is 2 characters)") if tag.length < 2
     end
+  end
+
+  def append_whitespace string
+    string += "\n" unless string =~ /\n\z/
+    string
   end
 end
