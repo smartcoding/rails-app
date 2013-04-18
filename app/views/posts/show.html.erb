@@ -1,10 +1,9 @@
 <% provide(:title, 'View post') %>
 
-<p><%= @body %></p>
-
-<p><%= @answer %></p>
-
-<p><%= @solution %></p>
+<%= simple_format @description %>
+<%= simple_format @body %>
+<%= simple_format @answer %>
+<%= simple_format @solution %>
 
 <p>Tags:
 <%= @tags %></p>
@@ -18,7 +17,8 @@
 
 <h1><%= @post.user.email.capitalize %> says:</h1>
 
-<p><%= @post.body %></p>
+<%= simple_format @post.description %>
+<%= simple_format @post.body %>
 
 <p>Tags: <%= raw @post.tag_list.map { |t| link_to t, tag_path(u t.downcase) }.join(', ') %></p>
 <p>Origins: <%= raw @post.origin_list.map { |t| link_to t, origin_path(u t.downcase) }.join(', ') %></p>

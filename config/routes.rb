@@ -1,9 +1,5 @@
 Smartcoding::Application.routes.draw do
 
-  get "tags/index"
-
-  get "tags/show"
-
   get '/auth/email', to: 'omniauth_email#new'
   post '/auth/email', to: 'omniauth_email#create'
   get '/auth/login', to: 'omniauth_password#new'
@@ -31,16 +27,16 @@ Smartcoding::Application.routes.draw do
       :format => :json
 
   resources :posts do
+    resources :patches, only: [:show] do
+      # /posts/:post_id/patches/:patch_id/merge
+      post 'merge'
+    end
     resources :comments, only: [:create]
     member do
       post 'like', :controller => "likes", :action => "create"
     end
     member do
       delete 'unlike', :controller => "likes", :action => "destroy"
-    end
-    member do
-      get 'pull/:pull_id', :action => "pull"
-      get 'pull/:pull_id/merge', :action => "pull_merge"
     end
   end
 

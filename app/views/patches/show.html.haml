@@ -1,8 +1,3 @@
-- if @mergeable
-  This pull can be merged automatically
-- else
-  This pull cannot be merged automatically
-
 .files
   - @diff.each_with_index do |diff, i|
     .file{id: "diff-#{i}"}
@@ -21,3 +16,13 @@
                   = link_to raw(type == "new" ? "&nbsp;" : line_old), "##{line_code}", id: line_code
                 %td.new_line= link_to raw(type == "old" ? "&nbsp;" : line_new) , "##{line_code}", id: line_code
                 %td.line_content{class: "noteable_line #{type} #{line_code}", "line_code" => line_code}= raw diff_line_content(line)
+
+- if @mergeable
+  - if @patch.is_pending?
+    = form_tag post_patch_merge_path(@post, @patch) do
+      = submit_tag "Merge"
+  - else
+    This patch was successfully merged
+- else
+  This pull cannot be merged automatically
+
