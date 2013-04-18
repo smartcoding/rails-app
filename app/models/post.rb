@@ -29,7 +29,7 @@ class Post < ActiveRecord::Base
   validates :body, presence: true, length: { minimum: 10 }
 
   validates :tag_list, presence: true
-  validates_format_of [:origin_list, :tag_list], :with => /\A(,?[\w\d\s\.]{2,20}){0,5}\z/,
+  validates_format_of [:origin_list, :tag_list], :with => /\A(,?[\w\d\s\.#+]{2,20}){0,5}\z/,
                       :message => 'Should only contain: letters, numbers, periods and underscores'
 
   after_create :add_to_timeline, :increment_author_posts_counter
