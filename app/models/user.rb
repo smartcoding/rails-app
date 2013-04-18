@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   has_many :timelines, dependent: :destroy
   has_many :likes, dependent: :destroy
+  has_many :patches, dependent: :destroy
 
   has_many :relationships, foreign_key: "follower_id", dependent: :destroy
   has_many :followed_users, through: :relationships, source: :followed

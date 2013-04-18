@@ -149,6 +149,40 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
+-- Name: patches; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE patches (
+    id integer NOT NULL,
+    user_id integer,
+    post_id integer,
+    body text,
+    status_cd integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: patches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE patches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: patches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE patches_id_seq OWNED BY patches.id;
+
+
+--
 -- Name: posts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -403,6 +437,13 @@ ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY patches ALTER COLUMN id SET DEFAULT nextval('patches_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY posts ALTER COLUMN id SET DEFAULT nextval('posts_id_seq'::regclass);
 
 
@@ -463,6 +504,14 @@ ALTER TABLE ONLY impressions
 
 ALTER TABLE ONLY likes
     ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: patches_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY patches
+    ADD CONSTRAINT patches_pkey PRIMARY KEY (id);
 
 
 --
@@ -749,3 +798,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130414210303');
 INSERT INTO schema_migrations (version) VALUES ('20130414213211');
 
 INSERT INTO schema_migrations (version) VALUES ('20130414213310');
+
+INSERT INTO schema_migrations (version) VALUES ('20130418174930');
