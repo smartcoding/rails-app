@@ -1,14 +1,14 @@
 GIT
   remote: git://github.com/libgit2/rugged.git
-  revision: c1c37b01e4ba9a3be6c9e32edce9d6522ac298e4
+  revision: de28323368854c73b9bd95b6cc3ee7b21a17a108
   branch: development
   submodules: true
   specs:
-    rugged (0.17.0.b8)
+    rugged (0.18.0.b1)
 
 GIT
   remote: git://github.com/sergeylukin/ruby-git.git
-  revision: ae37af8e807927045d0b04fb5337e3d212afe93e
+  revision: 4089c88ee81f33e6a1ef4ce26ffa521512c34298
   branch: patches
   specs:
     git (1.2.5)
