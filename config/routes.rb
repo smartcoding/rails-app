@@ -10,7 +10,12 @@ Smartcoding::Application.routes.draw do
              :path_names => {:sign_in => 'login', :sign_out => 'logout', :sign_up => 'register'},
              :controllers => {:omniauth_callbacks => "omniauth_callbacks",
                               :registrations => "registrations",
-                              :confirmations => "confirmations"}
+                              :confirmations => "confirmations",
+                              :invitations => "invitations"}
+  devise_scope :user do
+    get '/invite', to: 'invitations#new'
+    post '/invite', to: 'invitations#create'
+  end
   root :to => 'posts#index'
   get '/popular', to: 'posts#popular'
   get '/fresh', to: 'posts#fresh'
