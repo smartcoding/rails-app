@@ -66,6 +66,10 @@ GEM
       orm_adapter (~> 0.1)
       railties (~> 3.1)
       warden (~> 1.2.1)
+    devise_invitable (1.1.7)
+      actionmailer (~> 3.0)
+      devise (>= 2.1.2)
+      railties (~> 3.0)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -181,6 +185,7 @@ DEPENDENCIES
   certified
   coffee-rails (~> 3.2.1)
   devise
+  devise_invitable (~> 1.1.0)
   formtastic
   git!
   haml (~> 4.0.2)
