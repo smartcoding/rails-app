@@ -8,9 +8,9 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if user_signed_in?
       # user is trying to connect service to his existing account?
 
-      auth = User.find_by_provider_and_uid(provider, uid)
+      auth = Service.find_by_provider_and_uid(provider, uid)
       if auth.nil?
-        current_user.update_attributes(:provider => provider, :uid => uid)
+        current_user.services.build(:provider => provider, :uid => uid)
         flash[:notice] = 'Sign in via ' + provider.capitalize + ' has been added to your account.'
         redirect_to edit_user_registration_path
       else

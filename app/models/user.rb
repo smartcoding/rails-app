@@ -7,8 +7,7 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation,
-                  :remember_me, :username, :guest,
-                  :provider, :uid
+                  :remember_me, :username, :guest
 
   validates_presence_of :email
   validates :email, :format => { :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create }
@@ -21,6 +20,7 @@ class User < ActiveRecord::Base
   before_validation :generate_username_from_email, :on => :create
   before_validation :generate_username, :on => :create
 
+  has_many :services, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :timelines, dependent: :destroy
